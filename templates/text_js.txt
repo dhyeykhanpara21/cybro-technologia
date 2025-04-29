@@ -1,0 +1,121 @@
+function simulateKeyPress(key) {
+            // Only process if connected
+            if (!isConnected && key !== 'space') return;
+            
+            console.log(`Key pressed: ${key}`);
+            
+            // Find the corresponding button and add the key-pressed class
+            const button = document.querySelector(`.control-btn[data-key="${key}"]`);
+            if (button) {
+                button.classList.add('key-pressed');
+                setTimeout(() => {
+                    button.classList.remove('key-pressed');
+                }, 300);
+            }
+            
+            // // Handle different key commands
+            switch(key) {
+                case 'space':
+                    // Emergency stop - always available even if disconnected
+                    console.log('EMERGENCY STOP');
+                    executeScript('./emergency_stop.py');
+                    break;
+            //     case 'w':
+            //         // Move forward
+            //         sendRoverCommand('w');
+            //         break;
+            //     case 's':
+            //         // Move backward
+            //         sendRoverCommand('s');
+            //         break;
+            //     case 'a':
+            //         // Turn left
+            //         sendRoverCommand('a');
+            //         break;
+            //     case 'd':
+            //         // Turn right
+            //         sendRoverCommand('d');
+            //         break;
+            //     case 'q':
+            //         // Strafe left
+            //         sendRoverCommand('q');
+            //         break;
+            //     case 'e':
+            //         // Strafe right
+            //         sendRoverCommand('e');
+            //         break;
+            //     case '1':
+            //     case '2':
+            //     case '3':
+            //         // Speed levels
+            //         sendRoverCommand(`speed:${key * 33}`); // Convert 1,2,3 to 33,66,99 percent
+            //         break;
+            //     case 'r':
+            //         // Reset position
+            //         executeScript('./reset_position.py');
+            //         break;
+            //     case 'f':
+            //         // Toggle lights
+            //         executeScript('./toggle_lights.py');
+            //         break;
+            //     case 'c':
+            //         // Capture photo
+            //         executeScript('./capture_photo.py');
+            //         break;
+            //     case 'v':
+            //         // Record video
+            //         executeScript('./record_video.py');
+            //         break;
+            }
+        }
+        
+
+
+
+
+        // Keyboard event listeners
+        document.addEventListener('keydown', (e) => {
+            if (activeKeys.has(e.key)) return; // Prevent key repeat
+            activeKeys.add(e.key);
+            
+            // Map key to command
+            let command = null;
+            switch(e.key.toLowerCase()) {
+                // case 'w': command = 'w'; break;
+                // case 'a': command = 'a'; break;
+                // case 's': command = 's'; break;
+                // case 'd': command = 'd'; break;
+                // case 'q': command = 'q'; break;
+                // case 'e': command = 'e'; break;
+                // case 'r': command = 'r'; break;
+                // case 'f': command = 'f'; break;
+                // case 'c': command = 'c'; break;
+                // case 'v': command = 'v'; break;
+                // case '1': command = '1'; break;
+                // case '2': command = '2'; break;
+                // case '3': command = '3'; break;
+                case ' ': command = 'space'; break;
+            }
+            
+            if (command) {
+                simulateKeyPress(command);
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            activeKeys.delete(e.key);
+        });
+        
+        // Initialize UI on page load
+        window.addEventListener('load', () => {
+            updateConnectionUI('disconnected');
+            
+            // Disable control buttons initially
+            controlButtons.forEach(btn => {
+                btn.style.opacity = '0.6';
+                btn.style.pointerEvents = 'none';
+            });
+            
+            // Disable disconnect button initially
+            disconnectBtn.disabled = true;
+        });

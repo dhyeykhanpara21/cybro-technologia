@@ -453,28 +453,28 @@ footer {
             <div class="right-controls">
                 <div class="control-section">
                     <h3>Servo Controls</h3>
-                    <div class="control-btn" data-key="t">
-                        <div class="key">T</div>
+                    <div class="control-btn" data-key="U">
+                        <div class="key">U</div>
                         <div class="function">Shoulder +</div>
                     </div>
-                    <div class="control-btn" data-key="y">
-                        <div class="key">Y</div>
+                    <div class="control-btn" data-key="J">
+                        <div class="key">J</div>
                         <div class="function">Shoulder -</div>
                     </div>
-                    <div class="control-btn" data-key="g">
-                        <div class="key">G</div>
+                    <div class="control-btn" data-key="I">
+                        <div class="key">I</div>
                         <div class="function">Elbow +</div>
                     </div>
-                    <div class="control-btn" data-key="h">
-                        <div class="key">H</div>
+                    <div class="control-btn" data-key="K">
+                        <div class="key">K</div>
                         <div class="function">Elbow -</div>
                     </div>
-                    <div class="control-btn" data-key="o">
+                    <div class="control-btn" data-key="O">
                         <div class="key">O</div>
                         <div class="function">Grip +</div>
                     </div>
-                    <div class="control-btn" data-key="m">
-                        <div class="key">M</div>
+                    <div class="control-btn" data-key="L">
+                        <div class="key">L</div>
                         <div class="function">Grip -</div>
                     </div>
                     <div class="control-btn" data-key="ArrowUp">
@@ -741,85 +741,98 @@ footer {
                 }, 300);
             }
             
-            // // Handle different key commands
-            switch(key) {
+            // Handle different key commands
+            switch(key.toLowerCase()) {
                 case 'space':
                     // Emergency stop - always available even if disconnected
                     console.log('EMERGENCY STOP');
-                    executeScript('./emergency_stop.py');
+                    // executeScript('./emergency_stop.py');
                     break;
-            //     case 'w':
-            //         // Move forward
-            //         sendRoverCommand('w');
-            //         break;
-            //     case 's':
-            //         // Move backward
-            //         sendRoverCommand('s');
-            //         break;
-            //     case 'a':
-            //         // Turn left
-            //         sendRoverCommand('a');
-            //         break;
-            //     case 'd':
-            //         // Turn right
-            //         sendRoverCommand('d');
-            //         break;
-            //     case 'q':
-            //         // Strafe left
-            //         sendRoverCommand('q');
-            //         break;
-            //     case 'e':
-            //         // Strafe right
-            //         sendRoverCommand('e');
-            //         break;
-            //     case '1':
-            //     case '2':
-            //     case '3':
-            //         // Speed levels
-            //         sendRoverCommand(`speed:${key * 33}`); // Convert 1,2,3 to 33,66,99 percent
-            //         break;
-            //     case 'r':
-            //         // Reset position
-            //         executeScript('./reset_position.py');
-            //         break;
-            //     case 'f':
-            //         // Toggle lights
-            //         executeScript('./toggle_lights.py');
-            //         break;
-            //     case 'c':
-            //         // Capture photo
-            //         executeScript('./capture_photo.py');
-            //         break;
-            //     case 'v':
-            //         // Record video
-            //         executeScript('./record_video.py');
-            //         break;
-            }
+                case 'w': // Forward
+                    sendRoverCommand('w');
+                    break;
+                case 's': // Backward
+                    sendRoverCommand('s');
+                    break;
+                case 'a': // Tank Left
+                    sendRoverCommand('a');
+                    break;
+                case 'd': // Tank Right
+                    sendRoverCommand('d');
+                    break;
+                case 'q': // Soft Left
+                    sendRoverCommand('q');
+                    break;
+                case 'e': // Soft Right
+                    sendRoverCommand('e');
+                    break;
+                case 'z': // Crab Left
+                    sendRoverCommand('z');
+                    break;
+                case 'c': // Crab Right
+                    sendRoverCommand('c');
+                    break;
+                case 'r': // Rotate CW
+                    sendRoverCommand('r');
+                    break;
+                case 'l': // Rotate CCW
+                    sendRoverCommand('l');
+                    break;
+                case 'u': // Fwd-Left
+                    sendRoverCommand('u');
+                    break;
+                case 'i': // Fwd-Right
+                    sendRoverCommand('i');
+                    break;
+                case 'j': // Bwd-Left
+                    sendRoverCommand('j');
+                    break;
+                case 'k': // Bwd-Right
+                    sendRoverCommand('k');
+                    break;
+                case 'x': // Stop All Motors
+                    sendRoverCommand('x');
+                    break;
+                case 'escape': // Quit Program
+                    sendRoverCommand('escape');
+                    break;
+                case '1': // Slow Speed
+                case '2': // Medium Speed
+                case '3': // Max Speed
+                    sendRoverCommand(`speed:${key}`);
+                    break;
+                // Servo Controls
+                case 'u': // Shoulder +
+                    sendRoverCommand('shoulder:+');
+                    break;
+                case 'j': // Shoulder -
+                    sendRoverCommand('shoulder:-');
+                    break;
+                case 'i': // Elbow +
+                    sendRoverCommand('elbow:+');
+                    break;
+                case 'k': // Elbow -
+                    sendRoverCommand('elbow:-');
+                    break;
+                case 'o': // Grip +
+                    sendRoverCommand('grip:+');
+                    break;
+                case 'l': // Grip -
+                    sendRoverCommand('grip:-');
+                    break;
+                case 'arrowup': // Camera Up
+                    sendRoverCommand('camera:up');
+                    break;
+                case 'arrowdown': // Camera Down
+                    sendRoverCommand('camera:down');
+                    break;
+                case 'arrowright': // Camera Right
+                    sendRoverCommand('camera:right');
+                    break;
+                case 'arrowleft': // Camera Left
+                    sendRoverCommand('camera:left');
+                    break;
         }
-        
-        // Send command to the rover via backend
-        async function sendRoverCommand(command) {
-            if (!isConnected) return;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/rover/command`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ command: command }),
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                console.log('Command result:', result);
-                
-            } catch (error) {
-                console.error('Error sending command:', error);
-            }
         }
         
         // Keyboard event listeners
@@ -828,27 +841,7 @@ footer {
             activeKeys.add(e.key);
             
             // Map key to command
-            let command = null;
-            switch(e.key.toLowerCase()) {
-                // case 'w': command = 'w'; break;
-                // case 'a': command = 'a'; break;
-                // case 's': command = 's'; break;
-                // case 'd': command = 'd'; break;
-                // case 'q': command = 'q'; break;
-                // case 'e': command = 'e'; break;
-                // case 'r': command = 'r'; break;
-                // case 'f': command = 'f'; break;
-                // case 'c': command = 'c'; break;
-                // case 'v': command = 'v'; break;
-                // case '1': command = '1'; break;
-                // case '2': command = '2'; break;
-                // case '3': command = '3'; break;
-                case ' ': command = 'space'; break;
-            }
-            
-            if (command) {
-                simulateKeyPress(command);
-            }
+            simulateKeyPress(e.key);
         });
         
         document.addEventListener('keyup', (e) => {
