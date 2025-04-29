@@ -42,8 +42,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add keydown event listener to the document
     document.addEventListener("keydown", function(event) {
-        // Prevent default scrolling behavior for space key
-        if (event.key === " " || event.key === "Spacebar") {
+        // Prevent default scrolling behavior for space key, arrow keys, and escape key
+        if (event.key === " " || event.key === "Spacebar" || 
+            event.key === "ArrowUp" || event.key === "ArrowDown" || 
+            event.key === "ArrowLeft" || event.key === "ArrowRight" || 
+            event.key === "Escape") {
             event.preventDefault();
         }
         
