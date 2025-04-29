@@ -5,7 +5,7 @@
   --secondary-color: #fff1e2;    /* Slightly lighter dark grey */
   --accent-color: #8c87cf;       /* Pure black as accent */
   --text-color: #707070;         /* Medium grey for text */
-  --text-secondary: #5f5c5c;     /* Darker grey for secondary text */
+  --text-secondary: #ffffff;     /* Darker grey for secondary text */
   --dark-accent: #0a0a0a;        /* Very dark grey, nearly black */
   --card-bg: rgba(18, 18, 18, 0.9); /* Dark semi-transparent card background */
   --transition: all 0.3s ease;
