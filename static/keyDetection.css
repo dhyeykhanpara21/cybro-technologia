@@ -1,0 +1,15 @@
+/* Key Detection Styles */
+#status {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    min-height: 100px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}

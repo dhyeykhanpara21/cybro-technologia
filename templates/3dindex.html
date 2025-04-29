@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Object Viewer (with Embedded Frame)</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f0f0f0;
+        }
+        iframe {
+            border: none;
+            width: 80%;
+            height: 80%;
+            max-width: 800px;
+            max-height: 600px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+  <!-- Your Embedded 3D Model -->
+
+  <iframe
+    title="My Scene 1"
+    frameborder="0"
+    allowfullscreen="true"
+    mozallowfullscreen="true"
+    width="640" height="480"
+    webkitallowfullscreen="true"
+    src="https://realitymax.co/embed/8Yhxu6"
+    >
+  </iframe>
+</body>
+</html>

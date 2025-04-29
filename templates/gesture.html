@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesture Control - Cybro</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Gesture page specific styles */
+        .gesture-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+            padding: 2rem;
+            height: calc(100vh - 200px);
+        }
+        
+        .main-screen {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .main-screen-header {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .main-screen-title {
+            color: var(--primary-color);
+            font-family: var(--font-secondary);
+            letter-spacing: 1px;
+            margin: 0;
+        }
+        
+        .main-screen-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .main-display {
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-accent);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .user-panel-header {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .user-panel-title {
+            color: var(--primary-color);
+            font-family: var(--font-secondary);
+            letter-spacing: 1px;
+            margin: 0;
+        }
+        
+        .user-camera-container {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .camera-feed {
+            background-color: var(--dark-accent);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #user-camera {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .camera-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .camera-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .gesture-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .gesture-card {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .gesture-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--glow);
+        }
+        
+        .gesture-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .gesture-name {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+        
+        .status-bar {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--secondary-color);
+            box-shadow: var(--glow);
+        }
+        
+        .action-btn.secondary {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .action-btn.secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 992px) {
+            .gesture-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .main-screen, .user-panel {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <header>
+        <div class="logo">
+            <h1>CYBRO</h1>
+            <div class="logo-glitch"></div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="gesture-container">
+            <div class="user-panel">
+                <div class="user-panel-header">
+                    <h3 class="user-panel-title">User Camera</h3>
+                    <div class="panel-controls">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                </div>
+                <div class="user-camera-container">
+                    <div class="camera-feed">
+                        
+                        <div class="camera-placeholder">
+                            <div class="camera-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <p>Camera not active</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gesture-controls">
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-paper"></i>
+                            </div>
+                            <div class="gesture-name">Open Palm</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-point-up"></i>
+                            </div>
+                            <div class="gesture-name">Point</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-peace"></i>
+                            </div>
+                            <div class="gesture-name">Peace</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-thumbs-up"></i>
+                            </div>
+                            <div class="gesture-name">Thumbs Up</div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="start-camera" class="action-btn">
+                            <i class="fas fa-play"></i> Start Camera
+                        </button>
+                        <button id="stop-camera" class="action-btn secondary">
+                            <i class="fas fa-stop"></i> Stop
+                        </button>
+                    </div>
+                </div>
+                <div class="status-bar">
+                    <div class="status-indicator">
+                        <div class="indicator-dot"></div>
+                        <span>Ready for gestures</span>
+                    </div>
+                    <div class="fps">FPS: 0</div>
+                </div>
+            </div>
+            
+            <div class="main-screen">
+                <div class="main-screen-header">
+                    <h3 class="main-screen-title">Gesture Recognition</h3>
+                    <div class="screen-controls">
+                        <i class="fas fa-expand-alt"></i>
+                    </div>
+                </div>
+                <div class="main-screen-content">
+                    <div class="main-display">
+                        <div id="gesture-output">
+                            <img id="main-camera-feed" src="/video_feed" alt="Live Camera Feed" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+                <div class="status-bar">
+                    <div>Detected: None</div>
+                    <div>Confidence: 0%</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">CYBRO</div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Cybro Technologies. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Camera functionality
+        const startCameraBtn = document.getElementById('start-camera');
+        const stopCameraBtn = document.getElementById('stop-camera');
+        const userCamera = document.getElementById('user-camera-panel');
+        const cameraPlaceholder = document.querySelector('.camera-placeholder');
+        
+        // Since we're using server-side video feed, we don't need the getUserMedia code
+        // Just show/hide the camera feed when buttons are clicked
+        
+        // startCameraBtn.addEventListener('click', () => {
+        //     userCamera.style.display = 'block';
+        //     cameraPlaceholder.style.display = 'none';
+            
+        //     // Update status
+        //     document.querySelector('.status-indicator span').textContent = 'Camera active - detecting gestures';
+        // });
+        
+        // stopCameraBtn.addEventListener('click', () => {
+        //     userCamera.style.display = 'none';
+        //     cameraPlaceholder.style.display = 'flex';
+            
+        //     // Update status
+        //     document.querySelector('.status-indicator span').textContent = 'Ready for gestures';
+        //     document.querySelector('.fps').textContent = 'FPS: 0';
+        // });
+        
+        // Gesture card interaction for demo purposes
+const gestureCards = document.querySelectorAll('.gesture-card');
+const gestureOutput = document.getElementById('gesture-output');
+const detectedText = document.querySelector('.status-bar div:first-child');
+const confidenceText = document.querySelector('.status-bar div:last-child');
+
+gestureCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // Get the gesture name from the card
+        const gestureName = card.querySelector('.gesture-name').textContent;
+        const gestureIcon = card.querySelector('.gesture-icon i').className;
+        
+        // Update the main display
+        gestureOutput.innerHTML = `
+            <i class="${gestureIcon} fa-5x" style="color: var(--primary-color);"></i>
+            <p style="margin-top: 1rem;">${gestureName} detected</p>
+        `;
+        
+        // Update the status bar
+        detectedText.textContent = `Detected: ${gestureName}`;
+        
+        // Generate a random confidence value for demo purposes
+        const confidence = Math.floor(85 + Math.random() * 15);
+        confidenceText.textContent = `Confidence: ${confidence}%`;
+        
+        // Add a visual feedback to the selected card
+        gestureCards.forEach(c => c.style.borderColor = 'rgba(0, 255, 255, 0.1)');
+        card.style.borderColor = 'var(--primary-color)';
+        card.style.boxShadow = 'var(--glow)';
+        
+        // Reset the border after a delay
+        setTimeout(() => {
+            card.style.borderColor = 'rgba(0, 255, 255, 0.1)';
+            card.style.boxShadow = 'none';
+        }, 2000);
+    });
+});
+
+// Toggle menu for mobile
+const menuToggle = document.querySelector('.menu-toggle');
+const navMenu = document.querySelector('nav ul');
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
+}

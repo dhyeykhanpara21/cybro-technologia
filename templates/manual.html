@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Control - Cybro</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Manual control page specific styles */
+        .manual-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            gap: 1.5rem;
+            padding: 2rem;
+            min-height: calc(100vh - 200px); /* Changed from height to min-height */
+            margin-bottom: 2rem; /* Add margin at the bottom */
+        }
+            
+        
+        .left-controls, .right-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+            box-shadow: var(--glow);
+        }
+        
+        .control-btn:active {
+            transform: translateY(0);
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+        
+        .key {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            padding: 0.3rem 0.8rem;
+            font-family: var(--font-secondary);
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .function {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Adjust the camera panel to have a reasonable height rather than expanding too much */
+        .camera-panel {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 500px; /* Set a minimum height */
+        }
+
+        
+        .camera-header {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .camera-title {
+            color: var(--primary-color);
+            font-family: var(--font-secondary);
+            letter-spacing: 1px;
+            margin: 0;
+        }
+        
+        .camera-content {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .camera-feed {
+            flex: 1;
+            background-color: var(--dark-accent);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .camera-feed img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .camera-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .camera-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .control-info {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .control-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--secondary-color);
+            box-shadow: var(--glow);
+        }
+        
+        .action-btn.secondary {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .action-btn.secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+        
+        .status-bar {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .key-pressed {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            animation: flash 0.3s;
+        }
+        footer {
+            background-color: var(--dark-accent);
+            padding: 2rem 5%;
+            position: relative; /* Changed from any fixed position if it had one */
+            z-index: 10;
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            margin-top: auto; /* Push to the bottom of available space */
+        }
+
+        main {
+            min-height: auto; /* Override any fixed height */
+            padding: 2rem 5%;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes flash {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1200px) {
+            .manual-container {
+                grid-template-columns: 1fr 2fr 1fr;
+            }
+        }
+        
+        /* Update these styles in the <style> section of manual.html */
+
+/* Change the fixed height to min-height to allow content to expand */
+.manual-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 1.5rem;
+    padding: 2rem;
+    min-height: calc(100vh - 200px); /* Changed from height to min-height */
+    margin-bottom: 2rem; /* Add margin at the bottom */
+}
+
+/* Ensure the main element allows scrolling */
+main {
+    min-height: auto; /* Override any fixed height */
+    padding: 2rem 5%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Make sure the footer stays at the bottom but doesn't overlap content */
+footer {
+    background-color: var(--dark-accent);
+    padding: 2rem 5%;
+    position: relative; /* Changed from any fixed position if it had one */
+    z-index: 10;
+    border-top: 1px solid rgba(0, 255, 255, 0.1);
+    margin-top: auto; /* Push to the bottom of available space */
+}
+
+/* Adjust the camera panel to have a reasonable height rather than expanding too much */
+.camera-panel {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 500px; /* Set a minimum height */
+}
+
+    /* Responsive adjustments */
+    @media screen and (max-width: 992px) {
+        .manual-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+            min-height: auto;
+            gap: 2rem;
+        }
+        
+        .left-controls, .right-controls {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .control-btn {
+            width: calc(25% - 1rem);
+            min-width: 100px;
+        }
+    
+        .camera-panel {
+                height: 500px;
+        }
+        }
+        
+        @media screen and (max-width: 576px) {
+            .control-btn {
+                width: calc(33.33% - 1rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <header>
+        <div class="logo">
+            <h1>CYBRO</h1>
+            <div class="logo-glitch"></div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="manual-container">
+            <div class="left-controls">
+                <div class="control-btn" data-key="w">
+                    <div class="key">W</div>
+                    <div class="function">Move Forward</div>
+                </div>
+                <div class="control-btn" data-key="a">
+                    <div class="key">A</div>
+                    <div class="function">Turn Left</div>
+                </div>
+                <div class="control-btn" data-key="s">
+                    <div class="key">S</div>
+                    <div class="function">Move Backward</div>
+                </div>
+                <div class="control-btn" data-key="d">
+                    <div class="key">D</div>
+                    <div class="function">Turn Right</div>
+                </div>
+                <div class="control-btn" data-key="q">
+                    <div class="key">Q</div>
+                    <div class="function">Strafe Left</div>
+                </div>
+                <div class="control-btn" data-key="e">
+                    <div class="key">E</div>
+                    <div class="function">Strafe Right</div>
+                </div>
+                <div class="control-btn" data-key="space">
+                    <div class="key">SPACE</div>
+                    <div class="function">Emergency Stop</div>
+                </div>
+            </div>
+            
+            <div class="camera-panel">
+                <div class="camera-header">
+                    <h3 class="camera-title">Raspberry Pi Camera</h3>
+                    <div class="panel-controls">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                </div>
+                <div class="camera-content">
+                    <div class="camera-feed">
+                        <img id="pi-camera" src="" alt="Raspberry Pi Camera Feed">
+                        <div class="camera-placeholder">
+                            <div class="camera-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <p>Camera feed not active</p>
+                            <p>Press "Connect" to establish connection with Raspberry Pi</p>
+                        </div>
+                    </div>
+                    
+                    <div class="control-info">
+                        <h4>Manual Control Mode</h4>
+                        <p>Use keyboard controls or click the buttons to control the robot. Press SPACE for emergency stop.</p>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="connect-btn" class="action-btn">
+                            <i class="fas fa-plug"></i> Connect
+                        </button>
+                        <button id="disconnect-btn" class="action-btn secondary">
+                            <i class="fas fa-power-off"></i> Disconnect
+                        </button>
+                    </div>
+                </div>
+                <div class="status-bar">
+                    <div class="status-indicator">
+                        <div class="indicator-dot"></div>
+                        <span>Disconnected</span>
+                    </div>
+                    <div class="latency">Latency: --ms</div>
+                </div>
+            </div>
+            
+            <div class="right-controls">
+                <div class="control-btn" data-key="1">
+                    <div class="key">1</div>
+                    <div class="function">Speed Level 1</div>
+                </div>
+                <div class="control-btn" data-key="2">
+                    <div class="key">2</div>
+                    <div class="function">Speed Level 2</div>
+                </div>
+                <div class="control-btn" data-key="3">
+                    <div class="key">3</div>
+                    <div class="function">Speed Level 3</div>
+                </div>
+                <div class="control-btn" data-key="r">
+                    <div class="key">R</div>
+                    <div class="function">Reset Position</div>
+                </div>
+                <div class="control-btn" data-key="f">
+                    <div class="key">F</div>
+                    <div class="function">Toggle Lights</div>
+                </div>
+                <div class="control-btn" data-key="c">
+                    <div class="key">C</div>
+                    <div class="function">Capture Photo</div>
+                </div>
+                <div class="control-btn" data-key="v">
+                    <div class="key">V</div>
+                    <div class="function">Record Video</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- <h1>Press any key</h1>
+    <div id="status">Status messages will appear here...</div>
+     -->
+    <script src="../static/keyDetection.js"></script>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">CYBRO</div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Cybro Technologies. All rights reserved.</p>
+        </div>
+    </footer>
+
+     <script>
+        // Control buttons interaction
+        const controlButtons = document.querySelectorAll('.control-btn');
+        const statusIndicator = document.querySelector('.status-indicator span');
+        const indicatorDot = document.querySelector('.indicator-dot');
+        const latencyDisplay = document.querySelector('.latency');
+        const connectBtn = document.getElementById('connect-btn');
+        const disconnectBtn = document.getElementById('disconnect-btn');
+        const piCamera = document.getElementById('pi-camera');
+        const cameraPlaceholder = document.querySelector('.camera-placeholder');
+        
+        // Configuration
+        const API_BASE_URL = 'http://localhost:8000'; // Change to your backend URL
+        
+        let isConnected = false;
+        let activeKeys = new Set();
+        let isChecking = false;
+        
+        // Simulate button press when clicked
+        controlButtons.forEach(button => {
+            button.addEventListener('mousedown', () => {
+                const key = button.getAttribute('data-key');
+                simulateKeyPress(key);
+                button.classList.add('active');
+            });
+            
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('active');
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('active');
+            });
+        });
+        
+        // Connect button functionality
+        connectBtn.addEventListener('click', async () => {
+            if (isChecking) return;
+            
+            if (!isConnected) {
+                await checkConnection();
+            }
+        });
+        
+        // Disconnect button functionality
+        disconnectBtn.addEventListener('click', () => {
+            if (isConnected) {
+                disconnectFromRaspberryPi();
+            }
+        });
+        
+        // Check connection status with the backend
+        async function checkConnection() {
+            try {
+                isChecking = true;
+                updateConnectionUI('checking');
+                
+                const response = await fetch(`${API_BASE_URL}/api/rpi/check-connection`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                isConnected = data.connected;
+                updateConnectionUI(isConnected ? 'connected' : 'disconnected', data.error);
+                
+                // Update latency display with a simulated value if connected
+                if (isConnected) {
+                    const latency = Math.floor(Math.random() * 50) + 10; // Simulated latency between 10-60ms
+                    latencyDisplay.textContent = `Latency: ${latency}ms`;
+                } else {
+                    latencyDisplay.textContent = 'Latency: --ms';
+                }
+                
+            } catch (error) {
+                console.error('Error checking connection:', error);
+                isConnected = false;
+                updateConnectionUI('disconnected', 'Failed to connect to backend server');
+            } finally {
+                isChecking = false;
+            }
+        }
+        
+        // Disconnect from Raspberry Pi
+        function disconnectFromRaspberryPi() {
+            isConnected = false;
+            updateConnectionUI('disconnected');
+            latencyDisplay.textContent = 'Latency: --ms';
+        }
+        
+        // Update UI based on connection status
+        function updateConnectionUI(status, error = null) {
+            if (status === 'connected') {
+                statusIndicator.textContent = 'Connected';
+                indicatorDot.style.backgroundColor = '#4CAF50'; // Green
+                indicatorDot.style.animation = 'pulse 1.5s infinite';
+                connectBtn.disabled = true;
+                connectBtn.innerHTML = '<i class="fas fa-check"></i> Connected';
+                disconnectBtn.disabled = false;
+                
+                // Show camera feed (in a real implementation, you would set the actual stream URL)
+                cameraPlaceholder.style.display = 'none';
+                piCamera.style.display = 'block';
+                piCamera.src = 'https://via.placeholder.com/640x480.png?text=Camera+Feed+Active'; // Placeholder
+                
+                // Enable control buttons
+                controlButtons.forEach(btn => {
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                });
+                
+            } else if (status === 'disconnected') {
+                statusIndicator.textContent = 'Disconnected';
+                indicatorDot.style.backgroundColor = '#F44336'; // Red
+                indicatorDot.style.animation = 'none';
+                connectBtn.disabled = false;
+                connectBtn.innerHTML = '<i class="fas fa-plug"></i> Connect';
+                disconnectBtn.disabled = true;
+                
+                // Hide camera feed
+                cameraPlaceholder.style.display = 'flex';
+                piCamera.style.display = 'none';
+                piCamera.src = '';
+                
+                // Disable control buttons
+                controlButtons.forEach(btn => {
+                    btn.style.opacity = '0.6';
+                    btn.style.pointerEvents = 'none';
+                });
+                
+            } else if (status === 'checking') {
+                statusIndicator.textContent = 'Connecting...';
+                indicatorDot.style.backgroundColor = '#FFC107'; // Yellow
+                indicatorDot.style.animation = 'pulse 0.8s infinite';
+                connectBtn.disabled = true;
+                connectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+                disconnectBtn.disabled = true;
+            }
+            
+            // Display error message if there is one
+            if (error) {
+                console.error('Connection error:', error);
+                // You could add a toast notification or error display here
+            }
+        }
+        
+        // Execute a script at the specified path
+        // async function executeScript(scriptPath, arguments = [], timeout = 60) {
+        //     // change this to the actual code path script 
+        //     if (!isConnected && scriptPath !== './emergency_stop.py') return;
+            
+        //     try {
+        //         const response = await fetch(`${API_BASE_URL}/api/execute-script`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({
+        //                 script_path: scriptPath,
+        //                 arguments: arguments,
+        //                 timeout: timeout
+        //             }),
+        //         });
+                
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! Status: ${response.status}`);
+        //         }
+                
+        //         const result = await response.json();
+        //         console.log('Script execution result:', result);
+        //         return result;
+                
+        //     } catch (error) {
+        //         console.error('Error executing script:', error);
+        //         throw error;
+        //     }
+        // }
+        
+        // Simulate key press for button clicks
+        function simulateKeyPress(key) {
+            // Only process if connected
+            if (!isConnected && key !== 'space') return;
+            
+            console.log(`Key pressed: ${key}`);
+            
+            // Find the corresponding button and add the key-pressed class
+            const button = document.querySelector(`.control-btn[data-key="${key}"]`);
+            if (button) {
+                button.classList.add('key-pressed');
+                setTimeout(() => {
+                    button.classList.remove('key-pressed');
+                }, 300);
+            }
+            
+            // // Handle different key commands
+            switch(key) {
+                case 'space':
+                    // Emergency stop - always available even if disconnected
+                    console.log('EMERGENCY STOP');
+                    executeScript('./emergency_stop.py');
+                    break;
+            //     case 'w':
+            //         // Move forward
+            //         sendRoverCommand('w');
+            //         break;
+            //     case 's':
+            //         // Move backward
+            //         sendRoverCommand('s');
+            //         break;
+            //     case 'a':
+            //         // Turn left
+            //         sendRoverCommand('a');
+            //         break;
+            //     case 'd':
+            //         // Turn right
+            //         sendRoverCommand('d');
+            //         break;
+            //     case 'q':
+            //         // Strafe left
+            //         sendRoverCommand('q');
+            //         break;
+            //     case 'e':
+            //         // Strafe right
+            //         sendRoverCommand('e');
+            //         break;
+            //     case '1':
+            //     case '2':
+            //     case '3':
+            //         // Speed levels
+            //         sendRoverCommand(`speed:${key * 33}`); // Convert 1,2,3 to 33,66,99 percent
+            //         break;
+            //     case 'r':
+            //         // Reset position
+            //         executeScript('./reset_position.py');
+            //         break;
+            //     case 'f':
+            //         // Toggle lights
+            //         executeScript('./toggle_lights.py');
+            //         break;
+            //     case 'c':
+            //         // Capture photo
+            //         executeScript('./capture_photo.py');
+            //         break;
+            //     case 'v':
+            //         // Record video
+            //         executeScript('./record_video.py');
+            //         break;
+            }
+        }
+        
+        // Send command to the rover via backend
+        async function sendRoverCommand(command) {
+            if (!isConnected) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rover/command`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ command: command }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Command result:', result);
+                
+            } catch (error) {
+                console.error('Error sending command:', error);
+            }
+        }
+        
+        // Keyboard event listeners
+        document.addEventListener('keydown', (e) => {
+            if (activeKeys.has(e.key)) return; // Prevent key repeat
+            activeKeys.add(e.key);
+            
+            // Map key to command
+            let command = null;
+            switch(e.key.toLowerCase()) {
+                // case 'w': command = 'w'; break;
+                // case 'a': command = 'a'; break;
+                // case 's': command = 's'; break;
+                // case 'd': command = 'd'; break;
+                // case 'q': command = 'q'; break;
+                // case 'e': command = 'e'; break;
+                // case 'r': command = 'r'; break;
+                // case 'f': command = 'f'; break;
+                // case 'c': command = 'c'; break;
+                // case 'v': command = 'v'; break;
+                // case '1': command = '1'; break;
+                // case '2': command = '2'; break;
+                // case '3': command = '3'; break;
+                case ' ': command = 'space'; break;
+            }
+            
+            if (command) {
+                simulateKeyPress(command);
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            activeKeys.delete(e.key);
+        });
+        
+        // Initialize UI on page load
+        window.addEventListener('load', () => {
+            updateConnectionUI('disconnected');
+            
+            // Disable control buttons initially
+            controlButtons.forEach(btn => {
+                btn.style.opacity = '0.6';
+                btn.style.pointerEvents = 'none';
+            });
+            
+            // Disable disconnect button initially
+            disconnectBtn.disabled = true;
+        });
+    </script> 
+     
+    
