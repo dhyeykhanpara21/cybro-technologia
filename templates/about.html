@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="../static/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
-<body>
+<body class="about-page">
     <div class="noise-overlay"></div>
     
     <header>
@@ -28,8 +27,8 @@
             </div>
         </nav>
     </header>
-
-    <main class="about-page">
+    
+    <main>
         <section class="about-hero">
             <h2 class="section-title">About Us</h2>
             <div class="about-content">
@@ -43,7 +42,7 @@
                 </div>
             </div>
         </section>
-
+        
         <section class="team-section">
             <h2 class="section-title">Our Team</h2>
             <div class="team-grid">
@@ -51,34 +50,31 @@
                     <div class="member-image">
                         <img src="https://via.placeholder.com/200x200/19151A/00FFFF" alt="Team Member">
                     </div>
-                    <h3>Alex Morgan</h3>
-                    <p>Founder & CEO</p>
+                    <h3>Akshar Ratanpara</h3>
+                    <p>IOT developer</p>
                 </div>
+                
                 <div class="team-member">
                     <div class="member-image">
                         <img src="https://via.placeholder.com/200x200/19151A/00FFFF" alt="Team Member">
                     </div>
-                    <h3>Jamie Chen</h3>
-                    <p>CTO</p>
+                    <h3>Nishi Soni</h3>
+                    <p>Software Developer</p>
                 </div>
+                
                 <div class="team-member">
                     <div class="member-image">
                         <img src="https://via.placeholder.com/200x200/19151A/00FFFF" alt="Team Member">
                     </div>
-                    <h3>Sam Rodriguez</h3>
-                    <p>Lead Developer</p>
+                    <h3>Aditya Sahu</h3>
+                    <p>Software Developer</p>
                 </div>
-                <div class="team-member">
-                    <div class="member-image">
-                        <img src="https://via.placeholder.com/200x200/19151A/00FFFF" alt="Team Member">
-                    </div>
-                    <h3>Taylor Kim</h3>
-                    <p>Security Specialist</p>
+                
                 </div>
             </div>
         </section>
     </main>
-
+    
     <footer>
         <div class="footer-content">
             <div class="footer-logo">CYBRO</div>
@@ -92,7 +88,64 @@
             <p>&copy; 2023 Cybro Technologies. All rights reserved.</p>
         </div>
     </footer>
-
-    <script src="js/main.js"></script>
+    
+    <script>// Add this to your existing JavaScript file
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set animation order for cards
+            const cards = document.querySelectorAll('.feature-card, .service-card, .portfolio-item, .blog-card, .team-member, .about-card, .info-card');
+            cards.forEach((card, index) => {
+                card.style.setProperty('--animation-order', index);
+            });
+            
+            // Set animation order for nav items
+            const navItems = document.querySelectorAll('nav ul li');
+            navItems.forEach((item, index) => {
+                item.style.setProperty('--animation-order', index);
+            });
+            
+            // Scroll animations
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            
+            function checkScroll() {
+                animateElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Initial check
+            checkScroll();
+            
+            // Check on scroll
+            window.addEventListener('scroll', checkScroll);
+            
+            // Update connection status based on backend data
+            function updateConnectionStatus() {
+                fetch('/api/connection-status')
+                    .then(response => response.json())
+                    .then(data => {
+                        const statusElement = document.querySelector('.connection-status');
+                        if (data.connected) {
+                            statusElement.textContent = 'Connected to Raspberry Pi';
+                            statusElement.classList.add('connected');
+                            statusElement.classList.remove('disconnected');
+                        } else {
+                            statusElement.textContent = 'Disconnected from Raspberry Pi';
+                            statusElement.classList.add('disconnected');
+                            statusElement.classList.remove('connected');
+                        }
+                    })
+                    .catch(error => console.error('Error fetching connection status:', error));
+            }
+            
+            // Update connection status every 5 seconds
+            updateConnectionStatus();
+            setInterval(updateConnectionStatus, 5000);
+        });
+        </script>
 </body>
 </html>

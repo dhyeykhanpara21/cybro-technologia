@@ -6,7 +6,8 @@
     <title>Gesture Control - Cybro</title>
     <link rel="stylesheet" href="../static/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
+   
+   <style>
         /* Gesture page specific styles */
         .gesture-container {
             display: grid;
@@ -72,9 +73,10 @@
             border: 1px solid rgba(0, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-y: auto; /* Enable vertical scrolling for the entire panel */
+            max-height: calc(100vh - 250px); /* Set a maximum height relative to viewport */
         }
-        
+
         .user-panel-header {
             background-color: rgba(0, 0, 0, 0.3);
             padding: 1rem;
@@ -313,6 +315,79 @@
                                 <i class="fas fa-thumbs-up"></i>
                             </div>
                             <div class="gesture-name">Thumbs Up</div>
+                        </div>
+                        <!-- Additional gestures -->
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-rock"></i>
+                            </div>
+                            <div class="gesture-name">Rock</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-scissors"></i>
+                            </div>
+                            <div class="gesture-name">Scissors</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-lizard"></i>
+                            </div>
+                            <div class="gesture-name">Lizard</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-spock"></i>
+                            </div>
+                            <div class="gesture-name">Spock</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-fist"></i>
+                            </div>
+                            <div class="gesture-name">Fist</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-wave"></i>
+                            </div>
+                            <div class="gesture-name">Wave</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-ok"></i>
+                            </div>
+                            <div class="gesture-name">OK</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-victory"></i>
+                            </div>
+                            <div class="gesture-name">Victory</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-love"></i>
+                            </div>
+                            <div class="gesture-name">Love</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-call"></i>
+                            </div>
+                            <div class="gesture-name">Call</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-salute"></i>
+                            </div>
+                            <div class="gesture-name">Salute</div>
+                        </div>
+                        <div class="gesture-card">
+                            <div class="gesture-icon">
+                                <i class="fas fa-hand-pray"></i>
+                            </div>
+                            <div class="gesture-name">Pray</div>
                         </div>
                     </div>
                     
