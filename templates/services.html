@@ -6,9 +6,156 @@
     <title>Services - Cybro</title>
     <link rel="stylesheet" href="../static/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Background video styling */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-background video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        /* Overlay with dark aesthetic */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 8, 15, 0.7);
+            z-index: -1;
+        }
+        
+        /* Service cards styling */
+        .service-card {
+            background-color: rgba(91, 89, 93, 0.8);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(30, 18, 37, 0.3);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(17, 16, 18, 0.2);
+            border: 1px solid rgba(39, 36, 41, 0.4);
+        }
+        
+        .service-icon {
+            font-size: 2.5rem;
+            color: #1d1a23;
+            margin-bottom: 15px;
+        }
+        
+        .services-hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+            text-shadow: 0 0 10px rgba(19, 18, 23, 0.6);
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
+        }
+        
+        .service-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #120e1a;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .service-link:hover {
+            color: #100916;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: rgba(15, 12, 20, 0.7);
+            backdrop-filter: blur(5px);
+            margin: 40px auto;
+            max-width: 1000px;
+            border-radius: 8px;
+            border: 1px solid rgba(80, 50, 100, 0.3);
+        }
+        
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+        
+        .cta-section p {
+            margin-bottom: 25px;
+            color: #a0a0a0;
+        }
+        
+        .btn.primary {
+            background: linear-gradient(135deg, #272529, #1e1c1f);
+            border: none;
+            color: #e0e0e0;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(13, 12, 15, 0.4);
+        }
+    </style>
 </head>
 <body>
-    <div class="noise-overlay"></div>
+    <!-- Background video element -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline preload="auto">
+            <source src="{{ url_for('static', filename='services_bg.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="video-overlay"></div>
     
     <header>
         <div class="logo">
@@ -18,22 +165,22 @@
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li class="active"><a href="services.html">Services</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li class="active"><a href="{{ url_for('services') }}">Services</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
             </ul>
             <div class="menu-toggle">
                 <i class="fas fa-bars"></i>
             </div>
         </nav>
     </header>
-
+    
     <main class="services-page">
         <section class="services-hero">
             <h2 class="section-title">Our Services</h2>
             <p class="section-subtitle">Cutting-edge solutions for the digital age</p>
         </section>
-
+        
         <section class="services-grid">
             <div class="service-card">
                 <div class="service-icon">
@@ -57,20 +204,19 @@
                 <div class="service-icon">
                     <i class="fas fa-code"></i>
                 </div>
-            
                 <h3>AR/VR Development</h3>
                 <p>Create immersive experiences with our augmented and virtual reality development services. Perfect for training, marketing, or product visualization.</p>
                 <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
             </div>
         </section>
-
+        
         <section class="cta-section">
             <h2>Ready to transform your business?</h2>
             <p>Contact us today to discuss how our services can help you achieve your goals.</p>
-            <a href="contact.html" class="btn primary">Get Started</a>
+            <a href="{{ url_for('contact') }}" class="btn primary">Get Started</a>
         </section>
     </main>
-
+    
     <footer>
         <div class="footer-content">
             <div class="footer-logo">CYBRO</div>
@@ -84,7 +230,31 @@
             <p>&copy; 2023 Cybro Technologies. All rights reserved.</p>
         </div>
     </footer>
-
-    <script src="js/main.js"></script>
+    
+    <script>
+        // Ensure video plays continuously
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.video-background video');
+            
+            // Force video to play
+            function playVideo() {
+                if (video.paused) {
+                    video.play().catch(e => {
+                        console.error('Video play failed:', e);
+                    });
+                }
+            }
+            
+            // Try to play video immediately
+            playVideo();
+            
+            // Backup play attempts
+            video.addEventListener('canplaythrough', playVideo);
+            video.addEventListener('pause', playVideo);
+            document.addEventListener('click', playVideo);
+        });
+    </script>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

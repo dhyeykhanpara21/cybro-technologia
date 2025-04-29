@@ -1,17 +1,22 @@
- /* Base Styles and Variables - Updated color scheme */
- :root {
-  --bg-color: #050505;           /* Deep charcoal/near black background */
-  --primary-color: #fdeffc;      /* Dark grey */
-  --secondary-color: #fff1e2;    /* Slightly lighter dark grey */
-  --accent-color: #8c87cf;       /* Pure black as accent */
-  --text-color: #707070;         /* Medium grey for text */
-  --text-secondary: #ffffff;     /* Darker grey for secondary text */
-  --dark-accent: #0a0a0a;        /* Very dark grey, nearly black */
-  --card-bg: rgba(18, 18, 18, 0.9); /* Dark semi-transparent card background */
-  --transition: all 0.3s ease;
-  --glow: 0 0 10px rgba(249, 227, 227, 0.5); /* Black glow effect */
-  --font-main: 'Rajdhani', sans-serif;
-  --font-secondary: 'Share Tech Mono', monospace;
+ /* Base Styles and Variables - Updated metallic color scheme */
+/* Import Google Fonts - Professional Tech-Oriented */
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;400;500;700&display=swap');
+
+/* Update Root Variables with Professional Tech Fonts */
+:root {
+  --bg-color: #dbe1e7;           /* Dark blue-grey background */
+  --primary-color: #121417;      /* Metallic blue-grey */
+  --secondary-color: #dde4ed;    /* Steel blue metallic */
+  --accent-color: #5d6e82;       /* Deeper blue-grey metallic */
+  --text-color: #d8e0e9;         /* Light blue-grey for text */
+  --text-secondary: #dee6f0;     /* Muted blue-grey for secondary text */
+  --dark-accent: #2c343d;        /* Dark blue-grey accent */
+  --card-bg: rgba(35, 40, 48, 0.9); /* Dark blue-grey semi-transparent card background */
+  --glow: 0 0 10px rgba(167, 182, 199, 0.3); /* Blue-grey metallic glow effect */
+
+--font-main: 'Space Grotesk', sans-serif;
+  --font-secondary: 'Titillium Web', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 
@@ -115,6 +120,133 @@ p {
   letter-spacing: 2px;
   color: var(--primary-color);
   text-shadow: var(--glow);
+}
+/* Page Transition Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 rgba(167, 182, 199, 0); }
+  50% { box-shadow: 0 0 15px rgba(167, 182, 199, 0.5); }
+  100% { box-shadow: 0 0 0 rgba(167, 182, 199, 0); }
+}
+
+@keyframes borderPulse {
+  0% { border-color: var(--primary-color); }
+  50% { border-color: var(--secondary-color); }
+  100% { border-color: var(--primary-color); }
+}
+
+/* Apply animations to page elements */
+.hero, .about-hero, .services-hero, .portfolio-hero, .blog-hero, .contact-hero {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.logo, .section-title {
+  animation: scaleIn 0.8s ease-out forwards;
+}
+
+.feature-card, .service-card, .portfolio-item, .blog-card, .team-member, .about-card, .info-card {
+  animation: fadeIn 0.8s ease-out forwards;
+  animation-delay: calc(var(--animation-order, 0) * 0.1s);
+}
+
+nav ul li {
+  animation: slideInRight 0.5s ease-out forwards;
+  animation-delay: calc(var(--animation-order, 0) * 0.1s);
+  opacity: 0;
+}
+
+.hero h2, .about-content h3, .service-process h2, .contact-form-container h3 {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.hero p, .about-text p, .service-process p, .contact-form-container p {
+  animation: slideInRight 0.8s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+.btn:hover {
+  animation: pulseGlow 1.5s infinite;
+}
+
+.feature-card:hover, .service-card:hover, .portfolio-item:hover, .blog-card:hover, .team-member:hover {
+  animation: borderPulse 2s infinite;
+}
+
+/* JavaScript-triggered animations */
+.animate-on-scroll {
+  opacity: 0;
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+.animate-on-scroll.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.animate-on-scroll.slide-left {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.animate-on-scroll.slide-right {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.animate-on-scroll.scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* Connection status animation */
+.connection-status {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 8px 15px;
+  border-radius: 4px;
+  font-family: var(--font-secondary);
+  font-size: 0.9rem;
+  z-index: 100;
+  transition: var(--transition);
+}
+
+.connection-status.connected {
+  background-color: rgba(39, 174, 96, 0.2);
+  border: 1px solid #27ae60;
+  color: #2ecc71;
+  animation: pulseGlow 2s infinite;
+}
+
+.connection-status.disconnected {
+  background-color: rgba(231, 76, 60, 0.2);
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  animation: pulseGlow 1s infinite;
 }
 
 .section-subtitle {
@@ -504,7 +636,24 @@ nav ul li.active a {
 .about-hero {
   padding: 3rem 0;
 }
+body.about-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('bg_imageee.jpg'); /* Using your existing image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.5; /* Increased from 0.3 to 0.5 for better visibility */
+  z-index: -1;
+}
 
+body.about-page {
+  isolation: isolate;
+}
 .about-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -533,7 +682,7 @@ nav ul li.active a {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
 }
-
+/* Add this to your existing CSS file */
 .team-member {
   background-color: var(--card-bg);
   padding: 2rem;
@@ -541,12 +690,72 @@ nav ul li.active a {
   text-align: center;
   transition: var(--transition);
   border: 1px solid rgba(0, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
 }
+
+.team-member::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('bg_about.jpg'); /* Using your bg_about image for all team members */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.15; /* Subtle background so text remains readable */
+  z-index: -1;
+}
+
+/* Enhance the hover effect */
+.team-member:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--glow);
+  border-color: var(--primary-color);
+}
+
+.team-member:hover::before {
+  opacity: 0.25; /* Slightly more visible on hover */
+}
+
+/* Make sure the text remains readable against the background */
+.team-member h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+.team-member p {
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
 
 .team-member:hover {
   transform: translateY(-10px);
   box-shadow: var(--glow);
   border-color: var(--primary-color);
+}
+.team-member::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('bg_about.jpg'); /* Using your bg_about image for all team members */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.9; /* Subtle background so text remains readable */
+  z-index: -1;
 }
 
 .member-image {
