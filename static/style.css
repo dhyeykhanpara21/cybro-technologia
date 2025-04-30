@@ -672,6 +672,12 @@ body.about-page {
   margin-bottom: 1.5rem;
   font-size: 1.8rem;
 }
+.about-text p {
+  font-size: 1.2rem; /* Increase from default size */
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
 
 .team-section {
   padding: 5rem 0;
