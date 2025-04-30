@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
    
    <style>
+        /* Reduced size for main screen */
         .main-screen {
-            width: 80%; /* Reduce from 100% if that was the original */
-            max-width: 800px; /* Add a maximum width */
-            margin: 0 auto; /* Center the container */
-            height: auto; /* Let height adjust based on content */
-            max-height: 600px; /* Add a maximum height */
+            width: 70%; /* Reduced from 80% */
+            max-width: 600px; /* Reduced from 800px */
+            margin: 0 auto;
+            height: auto;
+            max-height: 500px; /* Reduced from 600px */
             display: flex;
             flex-direction: column;
             border-radius: 8px;
@@ -26,12 +27,12 @@
         .main-screen-content {
             flex: 1;
             overflow: hidden;
-            padding: 1rem; /* Reduce padding if needed */
+            padding: 0.8rem; /* Reduced padding */
         }
 
         .main-display {
             width: 100%;
-            height: 400px; /* Reduce height from original */
+            height: 300px; /* Reduced from 400px */
             background-color: var(--dark-accent);
             border-radius: 4px;
             overflow: hidden;
@@ -49,16 +50,16 @@
         #main-camera-feed {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Changed from cover to contain to show full image */
+            object-fit: contain;
         }
 
         /* Gesture page specific styles */
         .gesture-container {
             display: grid;
-            grid-template-columns: 1fr 3fr;
+            grid-template-columns: 1fr 2fr; /* Changed from 1fr 3fr to give less space to main screen */
             gap: 2rem;
             padding: 2rem;
-            height: calc(100vh - 200px);
+            min-height: calc(100vh - 200px);
         }
         
         .main-screen {
@@ -73,7 +74,7 @@
         
         .main-screen-header {
             background-color: rgba(0, 0, 0, 0.3);
-            padding: 1rem;
+            padding: 0.8rem; /* Reduced from 1rem */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -85,6 +86,7 @@
             font-family: var(--font-secondary);
             letter-spacing: 1px;
             margin: 0;
+            font-size: 1rem; /* Reduced font size */
         }
         
         .main-screen-content {
@@ -92,7 +94,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 1rem; /* Reduced from 2rem */
             background-color: rgba(0, 0, 0, 0.2);
         }
         
@@ -105,7 +107,7 @@
             align-items: center;
             justify-content: center;
             color: var(--text-secondary);
-            font-size: 1.2rem;
+            font-size: 1rem; /* Reduced from 1.2rem */
             border: 1px solid rgba(0, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
@@ -117,13 +119,13 @@
             border: 1px solid rgba(0, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
-            overflow-y: auto; /* Enable vertical scrolling for the entire panel */
-            max-height: calc(100vh - 250px); /* Set a maximum height relative to viewport */
+            overflow-y: auto;
+            max-height: calc(100vh - 250px);
         }
 
         .user-panel-header {
             background-color: rgba(0, 0, 0, 0.3);
-            padding: 1rem;
+            padding: 0.8rem; /* Reduced from 1rem */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -135,21 +137,22 @@
             font-family: var(--font-secondary);
             letter-spacing: 1px;
             margin: 0;
+            font-size: 1rem; /* Reduced font size */
         }
         
         .user-camera-container {
             flex: 1;
-            padding: 1rem;
+            padding: 0.8rem; /* Reduced from 1rem */
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.8rem; /* Reduced from 1rem */
         }
         
         .camera-feed {
             background-color: var(--dark-accent);
             border-radius: 4px;
             border: 1px solid rgba(0, 255, 255, 0.1);
-            height: 240px;
+            height: 200px; /* Reduced from 240px */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -169,28 +172,47 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem; /* Reduced from 1rem */
         }
         
         .camera-icon {
-            font-size: 2rem;
+            font-size: 1.5rem; /* Reduced from 2rem */
             color: var(--primary-color);
+        }
+        
+        /* Gesture controls section - appears when scrolling */
+        .gesture-section {
+            margin-top: 2rem; /* Reduced from 3rem */
+            padding: 1.5rem; /* Reduced from 2rem */
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .gesture-section-title {
+            color: var(--primary-color);
+            font-family: var(--font-secondary);
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem; /* Reduced from 2rem */
+            text-align: center;
+            font-size: 1.5rem; /* Reduced from 1.8rem */
         }
         
         .gesture-controls {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.8rem; /* Reduced from 1rem */
+            padding: 0.8rem; /* Reduced from 1rem */
         }
         
         .gesture-card {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 4px;
-            padding: 1rem;
+            padding: 0.8rem; /* Reduced from 1rem */
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem; /* Reduced from 0.5rem */
             border: 1px solid rgba(0, 255, 255, 0.1);
             transition: var(--transition);
             cursor: pointer;
@@ -203,35 +225,35 @@
         }
         
         .gesture-icon {
-            font-size: 1.5rem;
+            font-size: 1.2rem; /* Reduced from 1.5rem */
             color: var(--primary-color);
         }
         
         .gesture-name {
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* Reduced from 0.9rem */
             color: var(--text-color);
         }
         
         .status-bar {
             background-color: rgba(0, 0, 0, 0.3);
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem; /* Reduced from 0.5rem 1rem */
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-top: 1px solid rgba(0, 255, 255, 0.1);
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* Reduced from 0.9rem */
             color: var(--text-secondary);
         }
         
         .status-indicator {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem; /* Reduced from 0.5rem */
         }
         
         .indicator-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px; /* Reduced from 10px */
+            height: 8px; /* Reduced from 10px */
             border-radius: 50%;
             background-color: var(--primary-color);
             animation: pulse 1.5s infinite;
@@ -245,13 +267,13 @@
         
         .action-buttons {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 0.8rem; /* Reduced from 1rem */
+            margin-top: 0.8rem; /* Reduced from 1rem */
         }
         
         .action-btn {
             flex: 1;
-            padding: 0.8rem;
+            padding: 0.6rem; /* Reduced from 0.8rem */
             border: none;
             border-radius: 4px;
             background-color: var(--primary-color);
@@ -262,7 +284,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem; /* Reduced from 0.5rem */
+            font-size: 0.9rem; /* Added smaller font size */
         }
         
         .action-btn:hover {
@@ -289,7 +312,18 @@
             }
             
             .main-screen, .user-panel {
-                height: 500px;
+                height: auto;
+                max-height: none;
+            }
+            
+            .gesture-controls {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .gesture-controls {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -320,11 +354,9 @@
             <div class="user-panel">
                 <div class="user-panel-header">
                     <h3 class="user-panel-title">User Camera</h3>
-                    
                 </div>
                 <div class="user-camera-container">
                     <div class="camera-feed">
-                        
                         <div class="camera-placeholder">
                             <div class="camera-icon">
                                 <i class="fas fa-video"></i>
@@ -333,109 +365,9 @@
                         </div>
                     </div>
                     
-                    <div class="gesture-controls">
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-paper"></i>
-                            </div>
-                            <div class="gesture-name">Open Palm</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-point-up"></i>
-                            </div>
-                            <div class="gesture-name">Point</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-peace"></i>
-                            </div>
-                            <div class="gesture-name">Peace</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-thumbs-up"></i>
-                            </div>
-                            <div class="gesture-name">Thumbs Up</div>
-                        </div>
-                        <!-- Additional gestures -->
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-rock"></i>
-                            </div>
-                            <div class="gesture-name">Rock</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-scissors"></i>
-                            </div>
-                            <div class="gesture-name">Scissors</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-lizard"></i>
-                            </div>
-                            <div class="gesture-name">Lizard</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-spock"></i>
-                            </div>
-                            <div class="gesture-name">Spock</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-fist"></i>
-                            </div>
-                            <div class="gesture-name">Fist</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-wave"></i>
-                            </div>
-                            <div class="gesture-name">Wave</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-ok"></i>
-                            </div>
-                            <div class="gesture-name">OK</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-victory"></i>
-                            </div>
-                            <div class="gesture-name">Victory</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-love"></i>
-                            </div>
-                            <div class="gesture-name">Love</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-call"></i>
-                            </div>
-                            <div class="gesture-name">Call</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-salute"></i>
-                            </div>
-                            <div class="gesture-name">Salute</div>
-                        </div>
-                        <div class="gesture-card">
-                            <div class="gesture-icon">
-                                <i class="fas fa-hand-pray"></i>
-                            </div>
-                            <div class="gesture-name">Pray</div>
-                        </div>
-                    </div>
-                    
                     <div class="action-buttons">
                         <button id="start-camera" class="action-btn">
-                            <i class="fas fa-play"></i> Start Camera
+                            <i class="fas fa-play"></i> Start
                         </button>
                         <button id="stop-camera" class="action-btn secondary">
                             <i class="fas fa-stop"></i> Stop
@@ -445,16 +377,14 @@
                 <div class="status-bar">
                     <div class="status-indicator">
                         <div class="indicator-dot"></div>
-                     
+                        <span>Ready</span>
                     </div>
-                   
                 </div>
             </div>
             
             <div class="main-screen">
                 <div class="main-screen-header">
                     <h3 class="main-screen-title">Gesture Recognition</h3>
-                    
                 </div>
                 <div class="main-screen-content">
                     <div class="main-display">
@@ -464,7 +394,112 @@
                     </div>
                 </div>
                 <div class="status-bar">
-                 
+                    <div>Detected: None</div>
+                    <div>Confidence: 0%</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Separate section for gestures that appears when scrolling -->
+        <div class="gesture-section">
+            <h2 class="gesture-section-title">Available Gestures</h2>
+            <div class="gesture-controls">
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
+                    <div class="gesture-name">Open Palm</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-point-up"></i>
+                    </div>
+                    <div class="gesture-name">Point</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-peace"></i>
+                    </div>
+                    <div class="gesture-name">Peace</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-thumbs-up"></i>
+                    </div>
+                    <div class="gesture-name">Thumbs Up</div>
+                </div>
+                <!-- Additional gestures -->
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-rock"></i>
+                    </div>
+                    <div class="gesture-name">Rock</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-scissors"></i>
+                    </div>
+                    <div class="gesture-name">Scissors</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-lizard"></i>
+                    </div>
+                    <div class="gesture-name">Lizard</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-spock"></i>
+                    </div>
+                    <div class="gesture-name">Spock</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-fist"></i>
+                    </div>
+                    <div class="gesture-name">Fist</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-wave"></i>
+                    </div>
+                    <div class="gesture-name">Wave</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-ok"></i>
+                    </div>
+                    <div class="gesture-name">OK</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-victory"></i>
+                    </div>
+                    <div class="gesture-name">Victory</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-love"></i>
+                    </div>
+                    <div class="gesture-name">Love</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-call"></i>
+                    </div>
+                    <div class="gesture-name">Call</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-salute"></i>
+                    </div>
+                    <div class="gesture-name">Salute</div>
+                </div>
+                <div class="gesture-card">
+                    <div class="gesture-icon">
+                        <i class="fas fa-hand-pray"></i>
+                    </div>
+                    <div class="gesture-name">Pray</div>
                 </div>
             </div>
         </div>
@@ -488,73 +523,138 @@
         // Camera functionality
         const startCameraBtn = document.getElementById('start-camera');
         const stopCameraBtn = document.getElementById('stop-camera');
-        const userCamera = document.getElementById('user-camera-panel');
+        const userCamera = document.getElementById('user-camera');
         const cameraPlaceholder = document.querySelector('.camera-placeholder');
+        const statusIndicator = document.querySelector('.status-indicator span');
         
         // Since we're using server-side video feed, we don't need the getUserMedia code
         // Just show/hide the camera feed when buttons are clicked
         
-        // startCameraBtn.addEventListener('click', () => {
-        //     userCamera.style.display = 'block';
-        //     cameraPlaceholder.style.display = 'none';
+        startCameraBtn.addEventListener('click', () => {
+            // Show a message that camera is active
+            cameraPlaceholder.innerHTML = `
+                <div class="camera-icon">
+                    <i class="fas fa-video" style="color: #00ff00;"></i>
+                </div>
+                <p>Camera active</p>
+            `;
             
-        //     // Update status
-        //     document.querySelector('.status-indicator span').textContent = 'Camera active - detecting gestures';
-        // });
+            // Update status
+            if (statusIndicator) {
+                statusIndicator.textContent = 'Active - detecting gestures';
+            }
+        });
         
-        // stopCameraBtn.addEventListener('click', () => {
-        //     userCamera.style.display = 'none';
-        //     cameraPlaceholder.style.display = 'flex';
+        stopCameraBtn.addEventListener('click', () => {
+            // Reset to original placeholder
+            cameraPlaceholder.innerHTML = `
+                <div class="camera-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <p>Camera not active</p>
+            `;
             
-        //     // Update status
-        //     document.querySelector('.status-indicator span').textContent = 'Ready for gestures';
-        //     document.querySelector('.fps').textContent = 'FPS: 0';
-        // });
+            // Update status
+            if (statusIndicator) {
+                statusIndicator.textContent = 'Ready';
+            }
+            
+            // Reset the main display
+            document.getElementById('gesture-output').innerHTML = `
+                <img id="main-camera-feed" src="/video_feed" alt="Live Camera Feed" style="width: 100%; height: 100%; object-fit: cover;">
+            `;
+            
+            // Reset status bar
+            const detectedText = document.querySelector('.main-screen .status-bar div:first-child');
+            const confidenceText = document.querySelector('.main-screen .status-bar div:last-child');
+            
+            if (detectedText) detectedText.textContent = 'Detected: None';
+            if (confidenceText) confidenceText.textContent = 'Confidence: 0%';
+        });
         
         // Gesture card interaction for demo purposes
-const gestureCards = document.querySelectorAll('.gesture-card');
-const gestureOutput = document.getElementById('gesture-output');
-const detectedText = document.querySelector('.status-bar div:first-child');
-const confidenceText = document.querySelector('.status-bar div:last-child');
+        const gestureCards = document.querySelectorAll('.gesture-card');
+        const gestureOutput = document.getElementById('gesture-output');
+        
+        gestureCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Get the gesture name from the card
+                const gestureName = card.querySelector('.gesture-name').textContent;
+                const gestureIcon = card.querySelector('.gesture-icon i').className;
+                
+                // Update the main display
+                gestureOutput.innerHTML = `
+                    <i class="${gestureIcon} fa-4x" style="color: var(--primary-color);"></i>
+                    <p style="margin-top: 0.8rem; font-size: 0.9rem;">${gestureName} detected</p>
+                `;
+                
+                // Update the status bar
+                const detectedText = document.querySelector('.main-screen .status-bar div:first-child');
+                const confidenceText = document.querySelector('.main-screen .status-bar div:last-child');
+                
+                if (detectedText) detectedText.textContent = `Detected: ${gestureName}`;
+                
+                // Generate a random confidence value for demo purposes
+                const confidence = Math.floor(85 + Math.random() * 15);
+                if (confidenceText) confidenceText.textContent = `Confidence: ${confidence}%`;
+                
+                // Add a visual feedback to the selected card
+                gestureCards.forEach(c => c.style.borderColor = 'rgba(0, 255, 255, 0.1)');
+                card.style.borderColor = 'var(--primary-color)';
+                card.style.boxShadow = 'var(--glow)';
+                
+                // Reset the border after a delay
+                setTimeout(() => {
+                    card.style.borderColor = 'rgba(0, 255, 255, 0.1)';
+                    card.style.boxShadow = 'none';
+                }, 2000);
+            });
+        });
 
-gestureCards.forEach(card => {
-    card.addEventListener('click', () => {
-        // Get the gesture name from the card
-        const gestureName = card.querySelector('.gesture-name').textContent;
-        const gestureIcon = card.querySelector('.gesture-icon i').className;
-        
-        // Update the main display
-        gestureOutput.innerHTML = `
-            <i class="${gestureIcon} fa-5x" style="color: var(--primary-color);"></i>
-            <p style="margin-top: 1rem;">${gestureName} detected</p>
-        `;
-        
-        // Update the status bar
-        detectedText.textContent = `Detected: ${gestureName}`;
-        
-        // Generate a random confidence value for demo purposes
-        const confidence = Math.floor(85 + Math.random() * 15);
-        confidenceText.textContent = `Confidence: ${confidence}%`;
-        
-        // Add a visual feedback to the selected card
-        gestureCards.forEach(c => c.style.borderColor = 'rgba(0, 255, 255, 0.1)');
-        card.style.borderColor = 'var(--primary-color)';
-        card.style.boxShadow = 'var(--glow)';
-        
-        // Reset the border after a delay
-        setTimeout(() => {
-            card.style.borderColor = 'rgba(0, 255, 255, 0.1)';
-            card.style.boxShadow = 'none';
-        }, 2000);
-    });
-});
+        // Toggle menu for mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('nav ul');
 
-// Toggle menu for mobile
-const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('nav ul');
-
-if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
-}
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        }
+        
+        // Add a scroll reveal effect for the gesture section
+        document.addEventListener('DOMContentLoaded', function() {
+            const gestureSection = document.querySelector('.gesture-section');
+            
+            // Initially hide the gesture section
+            if (gestureSection) {
+                gestureSection.style.opacity = '0';
+                gestureSection.style.transform = 'translateY(20px)';
+                gestureSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            }
+            
+            // Show the gesture section when scrolled to
+            window.addEventListener('scroll', function() {
+                if (gestureSection) {
+                    const sectionPosition = gestureSection.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    
+                    if (sectionPosition < screenPosition) {
+                        gestureSection.style.opacity = '1';
+                        gestureSection.style.transform = 'translateY(0)';
+                    }
+                }
+            });
+            
+            // Check for video feed errors
+            const mainCameraFeed = document.getElementById('main-camera-feed');
+            if (mainCameraFeed) {
+                mainCameraFeed.onerror = function() {
+                    document.getElementById('gesture-output').innerHTML = 
+                        '<p style="color: var(--text-secondary); text-align: center;">Video feed not available.<br>Please check server connection.</p>';
+                };
+            }
+        });
+    </script>
+</body>
+</html>
+''
