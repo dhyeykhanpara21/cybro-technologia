@@ -4,14 +4,14 @@
 
 /* Update Root Variables with Professional Tech Fonts */
 :root {
-  --bg-color: #dbe1e7;           /* Dark blue-grey background */
-  --primary-color: #121417;      /* Metallic blue-grey */
+  --bg-color: #0c0c0c;           /* Dark blue-grey background */
+  --primary-color: #e6e6fc;      /* Metallic blue-grey */
   --secondary-color: #dde4ed;    /* Steel blue metallic */
   --accent-color: #5d6e82;       /* Deeper blue-grey metallic */
-  --text-color: #d8e0e9;         /* Light blue-grey for text */
-  --text-secondary: #dee6f0;     /* Muted blue-grey for secondary text */
+  --text-color: #85878a;         /* Light blue-grey for text */
+  --text-secondary: #e1eaf3;     /* Muted blue-grey for secondary text */
   --dark-accent: #2c343d;        /* Dark blue-grey accent */
-  --card-bg: rgba(35, 40, 48, 0.9); /* Dark blue-grey semi-transparent card background */
+  --card-bg: rgba(25, 29, 36, 0.9); /* Dark blue-grey semi-transparent card background */
   --glow: 0 0 10px rgba(167, 182, 199, 0.3); /* Blue-grey metallic glow effect */
 
 --font-main: 'Space Grotesk', sans-serif;
@@ -350,7 +350,7 @@ nav {
   background-color: var(--card-bg);
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
-  border: 1px solid rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(238, 244, 244, 0.1);
 }
 
 .controls-label {
