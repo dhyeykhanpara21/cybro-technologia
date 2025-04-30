@@ -13,28 +13,101 @@
             grid-template-columns: 1fr 3fr 1fr;
             gap: 1.5rem;
             padding: 2rem;
-            min-height: calc(100vh - 200px); /* Changed from height to min-height */
-            margin-bottom: 2rem; /* Add margin at the bottom */
+            min-height: calc(100vh - 200px);
+            margin-bottom: 2rem;
         }
-            
         
+        /* Make control sections scrollable */
         .left-controls, .right-controls {
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            max-height: 600px; /* Match camera panel height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 5px; /* Add padding for scrollbar */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: var(--primary-color) rgba(0,0,0,0.2); /* Firefox */
         }
         
+        /* Scrollbar styling for Webkit browsers */
+        .left-controls::-webkit-scrollbar,
+        .right-controls::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .left-controls::-webkit-scrollbar-track,
+        .right-controls::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        
+        .left-controls::-webkit-scrollbar-thumb,
+        .right-controls::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        .control-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .control-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        /* Different sized keys */
         .control-btn {
             background-color: var(--card-bg);
             border: 1px solid rgba(0, 255, 255, 0.1);
             border-radius: 8px;
-            padding: 1rem;
+            padding: 0.8rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
             transition: var(--transition);
             cursor: pointer;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Primary movement keys - larger */
+        .control-btn[data-key="w"],
+        .control-btn[data-key="a"],
+        .control-btn[data-key="s"],
+        .control-btn[data-key="d"],
+        .control-btn[data-key="space"] {
+            padding: 1rem;
+            background-color: rgba(0, 255, 255, 0.05);
+        }
+        
+        /* Emergency stop - largest */
+        .control-btn[data-key="space"] {
+            padding: 1.2rem;
+            background-color: rgba(255, 0, 0, 0.1);
+            border-color: rgba(255, 0, 0, 0.3);
+        }
+        
+        /* Secondary movement keys - medium */
+        .control-btn[data-key="q"],
+        .control-btn[data-key="e"],
+        .control-btn[data-key="z"],
+        .control-btn[data-key="c"],
+        .control-btn[data-key="r"],
+        .control-btn[data-key="l"] {
+            padding: 0.9rem;
+        }
+        
+        /* Speed controls - highlight */
+        .control-btn[data-key="1"],
+        .control-btn[data-key="2"],
+        .control-btn[data-key="3"] {
+            background-color: rgba(0, 255, 255, 0.08);
         }
         
         .control-btn:hover {
@@ -62,12 +135,11 @@
         }
         
         .function {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
-
         }
         
-        /* Adjust the camera panel to have a reasonable height rather than expanding too much */
+        /* Make camera panel match gesture recognition size */
         .camera-panel {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -75,9 +147,13 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            min-height: 500px; /* Set a minimum height */
+            height: auto;
+            max-height: 600px;
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
         }
-
         
         .camera-header {
             background-color: rgba(0, 0, 0, 0.3);
@@ -97,14 +173,14 @@
         
         .camera-content {
             flex: 1;
-            padding: 1.5rem;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
         }
         
         .camera-feed {
-            flex: 1;
+            height: 400px;
             background-color: var(--dark-accent);
             border-radius: 4px;
             border: 1px solid rgba(0, 255, 255, 0.1);
@@ -119,8 +195,7 @@
         .camera-feed img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            display: none;
+            object-fit: contain;
         }
         
         .camera-placeholder {
@@ -139,7 +214,7 @@
         .control-info {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 4px;
-            padding: 1rem;
+            padding: 0.8rem;
             font-size: 0.9rem;
             color: var(--text-secondary);
             border: 1px solid rgba(0, 255, 255, 0.1);
@@ -213,31 +288,16 @@
             animation: pulse 1.5s infinite;
         }
         
-        .key-pressed {
-            background-color: var(--primary-color);
-            color: var(--bg-color);
-            animation: flash 0.3s;
-        }
-        footer {
-            background-color: var(--dark-accent);
-            padding: 2rem 5%;
-            position: relative; /* Changed from any fixed position if it had one */
-            z-index: 10;
-            border-top: 1px solid rgba(0, 255, 255, 0.1);
-            margin-top: auto; /* Push to the bottom of available space */
-        }
-
-        main {
-            min-height: auto; /* Override any fixed height */
-            padding: 2rem 5%;
-            position: relative;
-            z-index: 2;
-        }
-
-        @keyframes flash {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        /* Section headers with sticky positioning */
+        .control-section h3 {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            padding: 0.5rem 0;
+            margin: 0 0 0.5rem 0;
+            z-index: 5;
+            color: var(--primary-color);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
         
         /* Responsive adjustments */
@@ -245,78 +305,56 @@
             .manual-container {
                 grid-template-columns: 1fr 2fr 1fr;
             }
+            
+            .camera-panel {
+                width: 90%;
+            }
         }
         
-        /* Update these styles in the <style> section of manual.html */
-
-/* Change the fixed height to min-height to allow content to expand */
-.manual-container {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    gap: 1.5rem;
-    padding: 2rem;
-    min-height: calc(100vh - 200px); /* Changed from height to min-height */
-    margin-bottom: 2rem; /* Add margin at the bottom */
-}
-
-/* Ensure the main element allows scrolling */
-main {
-    min-height: auto; /* Override any fixed height */
-    padding: 2rem 5%;
-    position: relative;
-    z-index: 2;
-}
-
-/* Make sure the footer stays at the bottom but doesn't overlap content */
-footer {
-    background-color: var(--dark-accent);
-    padding: 2rem 5%;
-    position: relative; /* Changed from any fixed position if it had one */
-    z-index: 10;
-    border-top: 1px solid rgba(0, 255, 255, 0.1);
-    margin-top: auto; /* Push to the bottom of available space */
-}
-
-/* Adjust the camera panel to have a reasonable height rather than expanding too much */
-.camera-panel {
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    border: 1px solid rgba(0, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 500px; /* Set a minimum height */
-}
-
-    /* Responsive adjustments */
-    @media screen and (max-width: 992px) {
-        .manual-container {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto;
-            min-height: auto;
-            gap: 2rem;
-        }
-        
-        .left-controls, .right-controls {
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .control-btn {
-            width: calc(25% - 1rem);
-            min-width: 100px;
-        }
-    
-        .camera-panel {
-                height: 500px;
-        }
+        @media screen and (max-width: 992px) {
+            .manual-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                min-height: auto;
+                gap: 2rem;
+            }
+            
+            .left-controls, .right-controls {
+                max-height: 300px;
+                flex-direction: column;
+                overflow-y: auto;
+                padding: 0 1rem;
+            }
+            
+            .control-section {
+                width: 100%;
+            }
+            
+            .control-btn {
+                width: 100%;
+            }
+            
+            .camera-panel {
+                width: 95%;
+                max-width: 600px;
+                height: auto;
+            }
+            
+            .camera-feed {
+                height: 350px;
+            }
         }
         
         @media screen and (max-width: 576px) {
-            .control-btn {
-                width: calc(33.33% - 1rem);
+            .camera-feed {
+                height: 300px;
             }
+        }
+        
+        @keyframes flash {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -340,7 +378,6 @@ footer {
             </div>
         </nav>
     </header>
-
     <main>
         <div class="manual-container">
             <div class="left-controls">
@@ -395,44 +432,28 @@ footer {
                         <div class="function">Fwd-Right</div>
                     </div>
                     <div class="control-btn" data-key="j">
+                        <div
                         <div class="key">J</div>
-                        <div class="function">Bwd-Left</div>
+                        <div class="function">Back-Left</div>
                     </div>
                     <div class="control-btn" data-key="k">
                         <div class="key">K</div>
-                        <div class="function">Bwd-Right</div>
+                        <div class="function">Back-Right</div>
                     </div>
+                </div>
+                
+                <div class="control-section">
+                    <h3>Emergency Controls</h3>
                     <div class="control-btn" data-key="space">
                         <div class="key">SPACE</div>
-                        <div class="function">Emergency Stop</div>
+                        <div class="function">EMERGENCY STOP</div>
                     </div>
                 </div>
             </div>
-                
+            
             <div class="camera-panel">
                 <div class="camera-header">
-                    <h3 class="camera-title">Raspberry Pi Camera</h3>
-                    <div class="panel-controls">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                </div>
-                <div class="camera-content">
-                    <div class="camera-feed">
-                        <img id="pi-camera" src="" alt="Raspberry Pi Camera Feed">
-                        <div class="camera-placeholder">
-                            <div class="camera-icon">
-                                <i class="fas fa-video"></i>
-                            </div>
-                            <p>Camera feed not active</p>
-                            <p>Press "Connect" to establish connection with Raspberry Pi</p>
-                        </div>
-                    </div>
-                    
-                    <div class="control-info">
-                        <h4>Manual Control Mode</h4>
-                        <p>Use keyboard controls or click the buttons to control the robot. Press SPACE for emergency stop.</p>
-                    </div>
-                    
+                    <h3 class="camera-title">Live Camera Feed</h3>
                     <div class="action-buttons">
                         <button id="connect-btn" class="action-btn">
                             <i class="fas fa-plug"></i> Connect
@@ -442,15 +463,23 @@ footer {
                         </button>
                     </div>
                 </div>
-                <div class="status-bar">
-                    <div class="status-indicator">
-                        <div class="indicator-dot"></div>
-                        <span>Disconnected</span>
+                <div class="camera-content">
+                    <div class="camera-feed">
+                        <img id="pi-camera" src="" alt="Camera Feed" style="display: none;">
+                        <div class="camera-placeholder">
+                            <div class="camera-icon">
+                                <i class="fas fa-video-slash"></i>
+                            </div>
+                            <p>Camera feed not available. Connect to the robot to start streaming.</p>
+                        </div>
                     </div>
-                    <div class="latency">Latency: --ms</div>
+                    <div class="control-info">
+                        <h4>Control Information</h4>
+                        <p>Use the keyboard controls to navigate the robot. Press SPACE for emergency stop at any time.</p>
+                    </div>
                 </div>
             </div>
-                
+            
             <div class="right-controls">
                 <div class="control-section">
                     <h3>Servo Controls</h3>
@@ -526,9 +555,7 @@ footer {
             </div>
         </div>
     </main>
-    <!-- <h1>Press any key</h1>
-    <div id="status">Status messages will appear here...</div>
-     -->
+    
     <script src="../static/keyDetection.js"></script>
     <footer>
         <div class="footer-content">
@@ -543,13 +570,10 @@ footer {
             <p>&copy; 2023 Cybro Technologies. All rights reserved.</p>
         </div>
     </footer>
-
-     <script>
+     
+    <script>
         // Control buttons interaction
         const controlButtons = document.querySelectorAll('.control-btn');
-        const statusIndicator = document.querySelector('.status-indicator span');
-        const indicatorDot = document.querySelector('.indicator-dot');
-        const latencyDisplay = document.querySelector('.latency');
         const connectBtn = document.getElementById('connect-btn');
         const disconnectBtn = document.getElementById('disconnect-btn');
         const piCamera = document.getElementById('pi-camera');
@@ -617,9 +641,9 @@ footer {
                 // Update latency display with a simulated value if connected
                 if (isConnected) {
                     const latency = Math.floor(Math.random() * 50) + 10; // Simulated latency between 10-60ms
-                    latencyDisplay.textContent = `Latency: ${latency}ms`;
+                    document.querySelector('.latency').textContent = `Latency: ${latency}ms`;
                 } else {
-                    latencyDisplay.textContent = 'Latency: --ms';
+                    document.querySelector('.latency').textContent = 'Latency: --ms';
                 }
                 
             } catch (error) {
@@ -635,11 +659,14 @@ footer {
         function disconnectFromRaspberryPi() {
             isConnected = false;
             updateConnectionUI('disconnected');
-            latencyDisplay.textContent = 'Latency: --ms';
+            document.querySelector('.latency').textContent = 'Latency: --ms';
         }
         
         // Update UI based on connection status
         function updateConnectionUI(status, error = null) {
+            const statusIndicator = document.querySelector('.status-indicator span');
+            const indicatorDot = document.querySelector('.indicator-dot');
+            
             if (status === 'connected') {
                 statusIndicator.textContent = 'Connected';
                 indicatorDot.style.backgroundColor = '#4CAF50'; // Green
@@ -694,38 +721,6 @@ footer {
             }
         }
         
-        // Execute a script at the specified path
-        // async function executeScript(scriptPath, arguments = [], timeout = 60) {
-        //     // change this to the actual code path script 
-        //     if (!isConnected && scriptPath !== './emergency_stop.py') return;
-            
-        //     try {
-        //         const response = await fetch(`${API_BASE_URL}/api/execute-script`, {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({
-        //                 script_path: scriptPath,
-        //                 arguments: arguments,
-        //                 timeout: timeout
-        //             }),
-        //         });
-                
-        //         if (!response.ok) {
-        //             throw new Error(`HTTP error! Status: ${response.status}`);
-        //         }
-                
-        //         const result = await response.json();
-        //         console.log('Script execution result:', result);
-        //         return result;
-                
-        //     } catch (error) {
-        //         console.error('Error executing script:', error);
-        //         throw error;
-        //     }
-        // }
-        
         // Simulate key press for button clicks
         function simulateKeyPress(key) {
             // Only process if connected
@@ -742,84 +737,13 @@ footer {
                 }, 300);
             }
             
-            // // Handle different key commands
+            // Handle different key commands
             switch(key) {
                 case 'space':
                     // Emergency stop - always available even if disconnected
                     console.log('EMERGENCY STOP');
-                    executeScript('./emergency_stop.py');
+                    // executeScript('./emergency_stop.py');
                     break;
-            //     case 'w':
-            //         // Move forward
-            //         sendRoverCommand('w');
-            //         break;
-            //     case 's':
-            //         // Move backward
-            //         sendRoverCommand('s');
-            //         break;
-            //     case 'a':
-            //         // Turn left
-            //         sendRoverCommand('a');
-            //         break;
-            //     case 'd':
-            //         // Turn right
-            //         sendRoverCommand('d');
-            //         break;
-            //     case 'q':
-            //         // Strafe left
-            //         sendRoverCommand('q');
-            //         break;
-            //     case 'e':
-            //         // Strafe right
-            //         sendRoverCommand('e');
-            //         break;
-            //     case '1':
-            //     case '2':
-            //     case '3':
-            //         // Speed levels
-            //         sendRoverCommand(`speed:${key * 33}`); // Convert 1,2,3 to 33,66,99 percent
-            //         break;
-            //     case 'r':
-            //         // Reset position
-            //         executeScript('./reset_position.py');
-            //         break;
-            //     case 'f':
-            //         // Toggle lights
-            //         executeScript('./toggle_lights.py');
-            //         break;
-            //     case 'c':
-            //         // Capture photo
-            //         executeScript('./capture_photo.py');
-            //         break;
-            //     case 'v':
-            //         // Record video
-            //         executeScript('./record_video.py');
-            //         break;
-            }
-        }
-        
-        // Send command to the rover via backend
-        async function sendRoverCommand(command) {
-            if (!isConnected) return;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/rover/command`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ command: command }),
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                console.log('Command result:', result);
-                
-            } catch (error) {
-                console.error('Error sending command:', error);
             }
         }
         
@@ -831,20 +755,36 @@ footer {
             // Map key to command
             let command = null;
             switch(e.key.toLowerCase()) {
-                // case 'w': command = 'w'; break;
-                // case 'a': command = 'a'; break;
-                // case 's': command = 's'; break;
-                // case 'd': command = 'd'; break;
-                // case 'q': command = 'q'; break;
-                // case 'e': command = 'e'; break;
-                // case 'r': command = 'r'; break;
-                // case 'f': command = 'f'; break;
-                // case 'c': command = 'c'; break;
-                // case 'v': command = 'v'; break;
-                // case '1': command = '1'; break;
-                // case '2': command = '2'; break;
-                // case '3': command = '3'; break;
                 case ' ': command = 'space'; break;
+                case 'w': command = 'w'; break;
+                case 'a': command = 'a'; break;
+                case 's': command = 's'; break;
+                case 'd': command = 'd'; break;
+                case 'q': command = 'q'; break;
+                case 'e': command = 'e'; break;
+                case 'r': command = 'r'; break;
+                case 'z': command = 'z'; break;
+                case 'c': command = 'c'; break;
+                case 'l': command = 'l'; break;
+                case 'u': command = 'u'; break;
+                case 'i': command = 'i'; break;
+                case 'j': command = 'j'; break;
+                case 'k': command = 'k'; break;
+                case 't': command = 't'; break;
+                case 'y': command = 'y'; break;
+                case 'g': command = 'g'; break;
+                case 'h': command = 'h'; break;
+                case 'o': command = 'o'; break;
+                case 'm': command = 'm'; break;
+                case '1': command = '1'; break;
+                case '2': command = '2'; break;
+                case '3': command = '3'; break;
+                case 'x': command = 'x'; break;
+                case 'escape': command = 'escape'; break;
+                case 'arrowup': command = 'arrowup'; break;
+                case 'arrowdown': command = 'arrowdown'; break;
+                case 'arrowleft': command = 'arrowleft'; break;
+                case 'arrowright': command = 'arrowright'; break;
             }
             
             if (command) {
@@ -858,17 +798,147 @@ footer {
         
         // Initialize UI on page load
         window.addEventListener('load', () => {
-            updateConnectionUI('disconnected');
+            // Create status bar since it was removed from HTML
+            const cameraPanel = document.querySelector('.camera-panel');
+            const statusBar = document.createElement('div');
+            statusBar.className = 'status-bar';
+            statusBar.innerHTML = `
+                <div class="status-indicator">
+                    <div class="indicator-dot"></div>
+                    <span>Disconnected</span>
+                </div>
+                <div class="latency">Latency: --ms</div>
+            `;
+            cameraPanel.appendChild(statusBar);
             
+            updateConnectionUI('disconnected');
             // Disable control buttons initially
             controlButtons.forEach(btn => {
                 btn.style.opacity = '0.6';
                 btn.style.pointerEvents = 'none';
             });
             
-            // Disable disconnect button initially
-            disconnectBtn.disabled = true;
+            // Add key-pressed class for visual feedback
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    this.classList.add('key-pressed');
+                });
+                
+                btn.addEventListener('mouseup', function() {
+                    this.classList.remove('key-pressed');
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.classList.remove('key-pressed');
+                });
+            });
         });
+        
+        // Function to send commands to the backend
+        async function sendCommand(command, value = null) {
+            if (!isConnected && command !== 'emergency_stop') return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rpi/command`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        command: command,
+                        value: value
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data;
+                
+            } catch (error) {
+                console.error('Error sending command:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        // Function to execute a Python script on the backend
+        async function executeScript(scriptPath, args = []) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rpi/execute-script`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        script: scriptPath,
+                        args: args
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data;
+                
+            } catch (error) {
+                console.error('Error executing script:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        // Add pulse animation for the indicator dot
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.2);
+                    opacity: 0.7;
+                }
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Add key-pressed animation
+        const keyPressedStyle = document.createElement('style');
+        keyPressedStyle.textContent = `
+            .key-pressed {
+                transform: translateY(2px) !important;
+                background-color: var(--primary-color) !important;
+                color: var(--bg-color) !important;
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.5) !important;
+            }
+            
+            .key-pressed .key {
+                background-color: rgba(0, 0, 0, 0.5) !important;
+                color: white !important;
+            }
+            
+            .key-pressed .function {
+                color: var(--bg-color) !important;
+            }
+        `;
+        document.head.appendChild(keyPressedStyle);
+        
+        // Periodically check connection status (every 10 seconds)
+        setInterval(() => {
+            if (isConnected) {
+                // Update latency with a simulated value
+                const latency = Math.floor(Math.random() * 50) + 10;
+                document.querySelector('.latency').textContent = `Latency: ${latency}ms`;
+            }
+        }, 10000);
     </script>
-     
-    
+</body>
+</html>
