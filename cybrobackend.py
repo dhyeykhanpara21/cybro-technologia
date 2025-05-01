@@ -141,17 +141,11 @@ def execute_script(script_path: str, arguments: list = None, timeout: int = 60) 
 
 
 
-# gesture settings don't touch
-
 
 # ====== MEDIA PIPELINE SETUP ======
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=2, min_detection_confidence=0.7)
 mp_drawing = mp.solutions.drawing_utils
-
-# Face detection setup
-mp_face_detection = mp.solutions.face_detection
-face_detection = mp_face_detection.FaceDetection(min_detection_confidence=0.7)
 
 # ====== VIDEO CAPTURE ======
 cap = cv2.VideoCapture(0)
@@ -199,23 +193,17 @@ def generate_frames():
 
         frame = cv2.flip(frame, 1)  # Flip horizontally to create mirror image
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results_hands = hands.process(rgb)
-        results_face = face_detection.process(rgb)
+        results = hands.process(rgb)
 
         gesture_text = None
-        if results_hands.multi_hand_landmarks:
-            for idx, landmarks in enumerate(results_hands.multi_hand_landmarks):
+        if results.multi_hand_landmarks:
+            for idx, landmarks in enumerate(results.multi_hand_landmarks):
                 mp_drawing.draw_landmarks(frame, landmarks, mp.solutions.hands.HAND_CONNECTIONS)
                 gesture = recognize_gesture(landmarks)
                 if gesture and (gesture != prev_actions[idx % 2] or time.time() - last_action_times[idx % 2] > 1):
                     prev_actions[idx % 2] = gesture
                     last_action_times[idx % 2] = time.time()
                     gesture_text = gesture
-
-        # Face detection
-        if results_face.detections:
-            for detection in results_face.detections:
-                mp_drawing.draw_detection(frame, detection)
 
         # Overlay detected gesture text
         if gesture_text:
