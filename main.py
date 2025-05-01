@@ -6,10 +6,38 @@ import websockets
 app = Flask(__name__)
 WS_URI = "ws://192.168.65.195:8765"  # Replace with your Pi's IP
 
-# Serve the manual.html page
-@app.route("/")
+
+# HTML Routes
+@app.route('/')
 def index():
-    return render_template("manual.html")
+    return render_template('index.html')
+
+@app.route('/about.html')
+def about():
+    return render_template('about.html')
+
+@app.route('/services.html')
+def services():
+    return render_template('services.html')
+
+@app.route('/contact.html')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/manual.html')
+def manual():
+    return render_template('manual.html')
+
+@app.route('/video_feed')
+def video_feed():
+    # Stream video frames
+    return Response(generate_frames(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/gesture.html')
+def gesture():
+    return render_template('gesture.html')
+
 
 # Async function to send WebSocket messages
 async def send_ws_message(message):
