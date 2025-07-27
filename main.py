@@ -23,10 +23,10 @@ import time
 
 app = Flask(__name__)
 CORS(app)
-WS_URI = "ws://192.168.65.195:8765"  # Replace with your Pi's IP
+WS_URI = "ws://172.20.10.195:8765"  # Replace with your Pi's IP
 
 # Raspberry Pi connection details
-RPI_HOST = '192.168.1.100'  # Replace with your Raspberry Pi's IP address
+RPI_HOST = '172.20.10.195'  # Replace with your Raspberry Pi's IP address
 RPI_PORT = 22  # SSH port or any other open port on your Pi
 
 # Connection status
