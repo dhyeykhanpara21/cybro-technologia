@@ -1,0 +1,7 @@
+Flask
+opencv-python
+mediapipe==0.10.21
+numpy==1.23.5
+Werkzeug==2.0.1
+python-socketio==5.8.0
+websockets==10.4

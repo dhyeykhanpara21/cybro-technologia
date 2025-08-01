@@ -465,12 +465,12 @@
                 </div>
                 <div class="camera-content">
                     <div class="camera-feed">
-                        <img id="pi-camera" src="" alt="Camera Feed" style="display: none;">
+                        <img id="pi-camera" src="" alt="Camera Feed" style="width: 100%; height: 100%; object-fit: contain; display: none;">
                         <div class="camera-placeholder">
                             <div class="camera-icon">
                                 <i class="fas fa-video-slash"></i>
                             </div>
-                            <p>Camera feed not available. Connect to the robot to start streaming.</p>
+                            <p>Camera feed not available. Connect to start streaming.</p>
                         </div>
                     </div>
                     <div class="control-info">
@@ -572,373 +572,88 @@
     </footer>
      
     <script>
-        // Control buttons interaction
         const controlButtons = document.querySelectorAll('.control-btn');
         const connectBtn = document.getElementById('connect-btn');
         const disconnectBtn = document.getElementById('disconnect-btn');
         const piCamera = document.getElementById('pi-camera');
         const cameraPlaceholder = document.querySelector('.camera-placeholder');
-        
-        // Configuration
-        const API_BASE_URL = 'http://localhost:8000'; // Change to your backend URL
-        
+    
         let isConnected = false;
-        let activeKeys = new Set();
-        let isChecking = false;
-        
-        // Simulate button press when clicked
-        controlButtons.forEach(button => {
-            button.addEventListener('mousedown', () => {
-                const key = button.getAttribute('data-key');
-                simulateKeyPress(key);
-                button.classList.add('active');
-            });
-            
-            button.addEventListener('mouseup', () => {
-                button.classList.remove('active');
-            });
-            
-            button.addEventListener('mouseleave', () => {
-                button.classList.remove('active');
-            });
-        });
-        
-        // Connect button functionality
+        let ws = null;
+    
+        // Initialize - hide disconnect button
+        disconnectBtn.style.display = 'none';
+    
         connectBtn.addEventListener('click', async () => {
-            if (isChecking) return;
-            
-            if (!isConnected) {
-                await checkConnection();
-            }
-        });
-        
-        // Disconnect button functionality
-        disconnectBtn.addEventListener('click', () => {
-            if (isConnected) {
-                disconnectFromRaspberryPi();
-            }
-        });
-        
-        // Check connection status with the backend
-        async function checkConnection() {
             try {
-                isChecking = true;
-                updateConnectionUI('checking');
+                // Connect to WebSocket
+                ws = new WebSocket('ws://172.20.10.195:8765');
                 
-                const response = await fetch(`${API_BASE_URL}/api/rpi/check-connection`, {
-                    method: 'POST'
-                });
+                ws.onopen = () => {
+                    isConnected = true;
+                    // Update UI for connected state
+                    connectBtn.style.display = 'none';
+                    disconnectBtn.style.display = 'inline-block';
+                    
+                    // Enable camera feed with the correct IP
+                    piCamera.src = 'http://172.20.10.195:8000/video_feed';
+                    piCamera.style.display = 'block';
+                    cameraPlaceholder.style.display = 'none';
+                    
+                    // Enable control buttons
+                    controlButtons.forEach(btn => {
+                        btn.style.opacity = '1';
+                        btn.style.pointerEvents = 'auto';
+                    });
+    
+                    console.log('Connected to robot');
+                };
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                ws.onclose = () => {
+                    handleDisconnect();
+                    console.log('Disconnected from robot');
+                };
                 
-                const data = await response.json();
-                
-                isConnected = data.connected;
-                updateConnectionUI(isConnected ? 'connected' : 'disconnected', data.error);
-                
-                // Update latency display with a simulated value if connected
-                if (isConnected) {
-                    const latency = Math.floor(Math.random() * 50) + 10; // Simulated latency between 10-60ms
-                    document.querySelector('.latency').textContent = `Latency: ${latency}ms`;
-                } else {
-                    document.querySelector('.latency').textContent = 'Latency: --ms';
-                }
+                ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    handleDisconnect();
+                };
                 
             } catch (error) {
-                console.error('Error checking connection:', error);
-                isConnected = false;
-                updateConnectionUI('disconnected', 'Failed to connect to backend server');
-            } finally {
-                isChecking = false;
-            }
-        }
-        
-        // Disconnect from Raspberry Pi
-        function disconnectFromRaspberryPi() {
-            isConnected = false;
-            updateConnectionUI('disconnected');
-            document.querySelector('.latency').textContent = 'Latency: --ms';
-        }
-        
-        // Update UI based on connection status
-        function updateConnectionUI(status, error = null) {
-            const statusIndicator = document.querySelector('.status-indicator span');
-            const indicatorDot = document.querySelector('.indicator-dot');
-            
-            if (status === 'connected') {
-                statusIndicator.textContent = 'Connected';
-                indicatorDot.style.backgroundColor = '#4CAF50'; // Green
-                indicatorDot.style.animation = 'pulse 1.5s infinite';
-                connectBtn.disabled = true;
-                connectBtn.innerHTML = '<i class="fas fa-check"></i> Connected';
-                disconnectBtn.disabled = false;
-                
-                // Show camera feed (in a real implementation, you would set the actual stream URL)
-                cameraPlaceholder.style.display = 'none';
-                piCamera.style.display = 'block';
-                piCamera.src = 'https://via.placeholder.com/640x480.png?text=Camera+Feed+Active'; // Placeholder
-                
-                // Enable control buttons
-                controlButtons.forEach(btn => {
-                    btn.style.opacity = '1';
-                    btn.style.pointerEvents = 'auto';
-                });
-                
-            } else if (status === 'disconnected') {
-                statusIndicator.textContent = 'Disconnected';
-                indicatorDot.style.backgroundColor = '#F44336'; // Red
-                indicatorDot.style.animation = 'none';
-                connectBtn.disabled = false;
-                connectBtn.innerHTML = '<i class="fas fa-plug"></i> Connect';
-                disconnectBtn.disabled = true;
-                
-                // Hide camera feed
-                cameraPlaceholder.style.display = 'flex';
-                piCamera.style.display = 'none';
-                piCamera.src = '';
-                
-                // Disable control buttons
-                controlButtons.forEach(btn => {
-                    btn.style.opacity = '0.6';
-                    btn.style.pointerEvents = 'none';
-                });
-                
-            } else if (status === 'checking') {
-                statusIndicator.textContent = 'Connecting...';
-                indicatorDot.style.backgroundColor = '#FFC107'; // Yellow
-                indicatorDot.style.animation = 'pulse 0.8s infinite';
-                connectBtn.disabled = true;
-                connectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
-                disconnectBtn.disabled = true;
-            }
-            
-            // Display error message if there is one
-            if (error) {
                 console.error('Connection error:', error);
-                // You could add a toast notification or error display here
-            }
-        }
-        
-        // Simulate key press for button clicks
-        function simulateKeyPress(key) {
-            // Only process if connected
-            if (!isConnected && key !== 'space') return;
-            
-            console.log(`Key pressed: ${key}`);
-            
-            // Find the corresponding button and add the key-pressed class
-            const button = document.querySelector(`.control-btn[data-key="${key}"]`);
-            if (button) {
-                button.classList.add('key-pressed');
-                setTimeout(() => {
-                    button.classList.remove('key-pressed');
-                }, 300);
-            }
-            
-            // Handle different key commands
-            switch(key) {
-                case 'space':
-                    // Emergency stop - always available even if disconnected
-                    console.log('EMERGENCY STOP');
-                    // executeScript('./emergency_stop.py');
-                    break;
-            }
-        }
-        
-        // Keyboard event listeners
-        document.addEventListener('keydown', (e) => {
-            if (activeKeys.has(e.key)) return; // Prevent key repeat
-            activeKeys.add(e.key);
-            
-            // Map key to command
-            let command = null;
-            switch(e.key.toLowerCase()) {
-                case ' ': command = 'space'; break;
-                case 'w': command = 'w'; break;
-                case 'a': command = 'a'; break;
-                case 's': command = 's'; break;
-                case 'd': command = 'd'; break;
-                case 'q': command = 'q'; break;
-                case 'e': command = 'e'; break;
-                case 'r': command = 'r'; break;
-                case 'z': command = 'z'; break;
-                case 'c': command = 'c'; break;
-                case 'l': command = 'l'; break;
-                case 'u': command = 'u'; break;
-                case 'i': command = 'i'; break;
-                case 'j': command = 'j'; break;
-                case 'k': command = 'k'; break;
-                case 't': command = 't'; break;
-                case 'y': command = 'y'; break;
-                case 'g': command = 'g'; break;
-                case 'h': command = 'h'; break;
-                case 'o': command = 'o'; break;
-                case 'm': command = 'm'; break;
-                case '1': command = '1'; break;
-                case '2': command = '2'; break;
-                case '3': command = '3'; break;
-                case 'x': command = 'x'; break;
-                case 'escape': command = 'escape'; break;
-                case 'arrowup': command = 'arrowup'; break;
-                case 'arrowdown': command = 'arrowdown'; break;
-                case 'arrowleft': command = 'arrowleft'; break;
-                case 'arrowright': command = 'arrowright'; break;
-            }
-            
-            if (command) {
-                simulateKeyPress(command);
+                handleDisconnect();
             }
         });
-        
-        document.addEventListener('keyup', (e) => {
-            activeKeys.delete(e.key);
+    
+        disconnectBtn.addEventListener('click', () => {
+            if (ws) {
+                ws.close();
+            }
+            handleDisconnect();
         });
-        
-        // Initialize UI on page load
-        window.addEventListener('load', () => {
-            // Create status bar since it was removed from HTML
-            const cameraPanel = document.querySelector('.camera-panel');
-            const statusBar = document.createElement('div');
-            statusBar.className = 'status-bar';
-            statusBar.innerHTML = `
-                <div class="status-indicator">
-                    <div class="indicator-dot"></div>
-                    <span>Disconnected</span>
-                </div>
-                <div class="latency">Latency: --ms</div>
-            `;
-            cameraPanel.appendChild(statusBar);
+    
+        function handleDisconnect() {
+            isConnected = false;
+            connectBtn.style.display = 'inline-block';
+            disconnectBtn.style.display = 'none';
             
-            updateConnectionUI('disconnected');
-            // Disable control buttons initially
+            // Disable camera feed
+            piCamera.src = '';
+            piCamera.style.display = 'none';
+            cameraPlaceholder.style.display = 'flex';
+            
+            // Disable control buttons
             controlButtons.forEach(btn => {
                 btn.style.opacity = '0.6';
                 btn.style.pointerEvents = 'none';
             });
-            
-            // Add key-pressed class for visual feedback
-            document.querySelectorAll('.control-btn').forEach(btn => {
-                btn.addEventListener('mousedown', function() {
-                    this.classList.add('key-pressed');
-                });
-                
-                btn.addEventListener('mouseup', function() {
-                    this.classList.remove('key-pressed');
-                });
-                
-                btn.addEventListener('mouseleave', function() {
-                    this.classList.remove('key-pressed');
-                });
-            });
-        });
-        
-        // Function to send commands to the backend
-        async function sendCommand(command, value = null) {
-            if (!isConnected && command !== 'emergency_stop') return;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/rpi/command`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        command: command,
-                        value: value
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                return data;
-                
-            } catch (error) {
-                console.error('Error sending command:', error);
-                return { success: false, error: error.message };
-            }
         }
-        
-        // Function to execute a Python script on the backend
-        async function executeScript(scriptPath, args = []) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/rpi/execute-script`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        script: scriptPath,
-                        args: args
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                return data;
-                
-            } catch (error) {
-                console.error('Error executing script:', error);
-                return { success: false, error: error.message };
-            }
-        }
-        
-        // Add pulse animation for the indicator dot
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0% {
-                    transform: scale(1);
-                    opacity: 1;
-                }
-                50% {
-                    transform: scale(1.2);
-                    opacity: 0.7;
-                }
-                100% {
-                    transform: scale(1);
-                    opacity: 1;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Add key-pressed animation
-        const keyPressedStyle = document.createElement('style');
-        keyPressedStyle.textContent = `
-            .key-pressed {
-                transform: translateY(2px) !important;
-                background-color: var(--primary-color) !important;
-                color: var(--bg-color) !important;
-                box-shadow: 0 0 15px rgba(0, 255, 255, 0.5) !important;
-            }
-            
-            .key-pressed .key {
-                background-color: rgba(0, 0, 0, 0.5) !important;
-                color: white !important;
-            }
-            
-            .key-pressed .function {
-                color: var(--bg-color) !important;
-            }
-        `;
-        document.head.appendChild(keyPressedStyle);
-        
-        // Periodically check connection status (every 10 seconds)
-        setInterval(() => {
-            if (isConnected) {
-                // Update latency with a simulated value
-                const latency = Math.floor(Math.random() * 50) + 10;
-                document.querySelector('.latency').textContent = `Latency: ${latency}ms`;
-            }
-        }, 10000);
+    
+        // Handle camera errors
+        piCamera.onerror = () => {
+            console.error('Failed to load camera feed');
+            handleDisconnect();
+        };
     </script>
-</body>
+    </body>
 </html>

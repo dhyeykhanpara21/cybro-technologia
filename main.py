@@ -26,7 +26,9 @@ CORS(app)
 WS_URI = "ws://172.20.10.195:8765"  # Replace with your Pi's IP
 
 # Raspberry Pi connection details
-RPI_HOST = '172.20.10.195'  # Replace with your Raspberry Pi's IP address
+# Update the Raspberry Pi IP address
+RPI_HOST = '172.20.10.195'  # Your Raspberry Pi's IP address
+RPI_PORT = 8000  # Port where the camera service is running
 RPI_PORT = 22  # SSH port or any other open port on your Pi
 
 # Connection status
@@ -287,6 +289,43 @@ def gesture():
     # Serve the HTML UI
     return render_template('gesture.html')
 
+
+# Add camera as a global variable
+camera = None
+
+@app.teardown_appcontext
+def cleanup(exception):
+    global camera
+    if camera is not None:
+        camera.cleanup()
+
+# Initialize camera when needed
+def init_camera():
+    global camera
+    try:
+        # Try to get camera feed from Raspberry Pi
+        response = requests.get(f'http://{RPI_HOST}:{CAMERA_PORT}/video_feed', stream=True)
+        if response.status_code == 200:
+            return response
+    except requests.exceptions.RequestException:
+        print("Failed to connect to Raspberry Pi camera")
+    return None
+
+@app.route('/manual_camera_feed')
+def manual_camera_feed():
+    try:
+        # Stream directly from Raspberry Pi
+        response = requests.get(f'http://{RPI_HOST}:{CAMERA_PORT}/video_feed', stream=True)
+        return Response(stream_with_context(response.iter_content()),
+                       mimetype='multipart/x-mixed-replace; boundary=frame')
+    except requests.exceptions.RequestException:
+        return "Failed to connect to camera", 503
+
+@app.route('/capture_manual_image', methods=['POST'])
+def capture_manual_image():
+    camera = init_camera()  # Initialize camera if not already initialized
+    camera.capture_image()
+    return jsonify({"status": "success"})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
